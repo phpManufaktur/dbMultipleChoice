@@ -1,0 +1,28 @@
+<!-- $Id: backend.about.htt 6 2010-07-18 09:52:09Z ralf $ -->
+<table width="99%">
+  <colgroup>
+    <col width="470" />   
+    <col width="*" />
+  </colgroup>
+  <tr>
+    <td style="text-align: left;">
+      <img src="{$img}" alt="dbMultipleChoice"/>
+    </td>
+    <td style="vertical-align: bottom;">
+      <p><b>dbMultipleChoice</b>, Release {$release}<br />
+      (c) 2010 by <b><i>php</i>Manufaktur</b></p>
+      <p>Ralf Hertsch<br />
+      Stockholmer Str. 31<br />
+      13359 Berlin (Germany)</p>
+      <p><b>+49 (0)30 68813647</b></p>
+      <p><b><a href="mailto:ralf.hertsch@phpmanufaktur.de">ralf.hertsch@phpManufaktur.de</a></b><br />
+        <a href="http://phpManufaktur.de" target="_blank">http://phpManufaktur.de</a></p>
+    </td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td>
+      <a href="http://phpmanufaktur.de" target="_blank"><img src="{$qrcode}" width="135" height="135" alt="phpManufaktur" /></a>
+    </td>
+  </tr>
+</table>

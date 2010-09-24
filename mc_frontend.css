@@ -1,0 +1,37 @@
+/*
+  Multiple Choice
+*/
+.mc_frontend {
+
+}
+.mc_question {
+  margin: 0;
+  padding: 30px 0 15px 0;
+  font-size: larger;
+  font-weight: bold;
+}
+.mc_description {
+  font-style: italic;
+}
+.mc_answer_false {
+  color: #ffffff;
+  background-color:#990000;
+}
+.mc_answer_correct {
+  color: #fff;
+  background-color: green;
+}
+.mc_answer_hint_correct {
+  color: #fff;
+  background-color: #ffa500;
+}
+.mc_answer_explain {
+  font-style: italic;
+  border: 1px solid #000;
+  padding: 10px;
+  color: #000;
+  background-color: #ffffdd;
+}
+.mc_submit {
+  padding: 30px 0 10px 0;
+}

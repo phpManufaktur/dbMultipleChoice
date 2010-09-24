@@ -1,0 +1,14 @@
+<!-- $Id: backend.questionaire.list.htt 4 2010-07-17 12:04:42Z ralf $ -->
+<h2>{$header}</h2>
+{$intro}
+<table width="100%">
+  <colgroup>
+    <col width="5%" />
+    <col width="25%" />
+    <col width="35%" />
+    <col width="5%" />
+    <col width="20%" />
+    <col width="10%" />
+  </colgroup>
+  {$items}
+</table>

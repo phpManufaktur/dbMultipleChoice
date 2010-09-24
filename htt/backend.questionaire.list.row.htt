@@ -1,0 +1,8 @@
+<tr class="{$flipflop}">
+  <td>{$id}</td>
+  <td>{$name}</td>
+  <td>{$title}</td>
+  <td>{$questions_sum}</td>
+  <td>{$groups}</td>
+  <td>{$status}</td>
+</tr>

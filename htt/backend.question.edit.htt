@@ -1,0 +1,23 @@
+<!-- $Id: backend.question.edit.htt 4 2010-07-17 12:04:42Z ralf $ -->
+<h2>{$header}</h2>
+{$intro}
+<form name="{$form_name}" action="{$form_action}" method="post">
+  <input type="hidden" name="{$action_name}" value="{$action_value}" />
+  <input type="hidden" name="{$tab_action_name}" value="{$tab_action_value}" />
+  <input type="hidden" name="{$qid_name}" value="{$qid_value}" />
+  <input type="hidden" name="{$sub_action_name}" value="{$sub_action_value}" />
+  <table width="100%">
+    <colgroup>
+      <col width="20%" />
+      <col width="80%" />
+    </colgroup>
+    {$items}
+    <tr><td colspan="2">&nbsp;</td></tr>
+    <tr>
+      <td colspan="2">
+        <input type="submit" value="{$btn_ok}" />&nbsp;
+        <input type="button" value="{$btn_abort}" onclick="javascript: window.location = '{$abort_location}'; return false;" />
+      </td>
+    </tr>
+  </table>
+</form>

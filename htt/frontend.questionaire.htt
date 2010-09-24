@@ -1,0 +1,19 @@
+<!-- $Id: frontend.questionaire.htt 5 2010-07-17 14:29:51Z ralf $ -->
+<h2>{$header}</h2>
+{$intro}
+<form name="{$form_name}" action="{$form_action}" method="post">
+  <input type="hidden" name="{$action_name}" value="{$action_value}" />
+  <input type="hidden" name="{$qid_name}" value="{$qid_value}" />
+  <table width="99%">
+    <colgroup>
+      <col width="5%">
+      <col width="90%">
+      <col width="5%">
+    </colgroup>
+    {$items}
+  </table>
+  <div class="mc_submit">
+    <input type="submit" value="{$btn_submit}" />&nbsp;
+    <!-- <input type="reset" value="{$btn_reset}" /> -->
+  </div>
+</form>

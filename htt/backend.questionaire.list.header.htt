@@ -1,0 +1,8 @@
+<tr>
+  <th>{$id}</th>
+  <th>{$name}</th>
+  <th>{$title}</th>
+  <th>{$questions_sum}</th>
+  <th>{$groups}</th>
+  <th>{$status}</th>
+</tr>

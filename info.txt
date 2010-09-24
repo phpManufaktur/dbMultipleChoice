@@ -1,0 +1,21 @@
+dbMultipleChoice - Multiple Choice Tests fuer WebsiteBaker
+(c) 2010 by phpManufaktur, Berlin (Germany)
+http://phpManufaktur.de - info@phpManufaktur.de
+
+Release 0.13 
+2010-09-20
+- fixed: problem with wrong masking of strings
+
+Release 0.12 (stable)
+2010-09-01
+- added: support for english language
+- fixed: some small problems
+
+Release 0.11
+2010-07-17
+- fixed: some smaller problems, cleanup
+- added: optional showing the correct answer as hint
+
+Release 0.10
+2010-06-10
+*** First beta release ***

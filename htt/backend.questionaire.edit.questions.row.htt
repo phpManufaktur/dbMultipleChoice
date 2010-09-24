@@ -1,0 +1,7 @@
+<tr class="{$flipflop}">
+  <td>{$checkbox}</td>
+  <td>{$id}</td>
+  <td>{$name}</td>
+  <td>{$question}</td>
+  <td>{$groups}</td>
+</tr>

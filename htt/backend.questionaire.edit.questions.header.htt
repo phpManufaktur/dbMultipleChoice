@@ -1,0 +1,7 @@
+<tr>
+  <th>{$checkbox}</th>
+  <th>{$id}</th>
+  <th>{$name}</th>
+  <th>{$question}</th>
+  <th>{$groups}</th>
+</tr>

@@ -1,0 +1,5 @@
+<tr class="{$class}">
+  <td>{$checkbox}</td>
+  <td>{$answer}</td>
+  <td>{$info}</td>
+</tr>
