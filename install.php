@@ -38,35 +38,7 @@ foreach ($tables as $table) {
 		}
 	}
 }
-/*
-$dbCfg = new dbMultipleChoiceCfg();
-if (!$dbCfg->sqlTableExists()) {
-	if (!$dbCfg->sqlCreateTable()) {
-		$error .= sprintf('[INSTALLATION] %s', $dbCfg->getError());
-	}
-}
 
-$dbMCQuestion = new dbMultipleChoiceQuestion();
-if (!$dbMCQuestion->sqlTableExists()) {
-	if (!$dbMCQuestion->sqlCreateTable()) {
-		$error .= sprintf('[INSTALLATION] %s', $dbMCQuestion->getError());
-	}
-}
-
-$dbMCQuestionaire = new dbMultipleChoiceQuestionaire();
-if (!$dbMCQuestionaire->sqlTableExists()) {
-	if (!$dbMCQuestionaire->sqlCreateTable()) {
-		$error .= sprintf('[INSTALLATION] %s', $dbMCQuestionaire->getError());
-	}
-}
-
-$dbMCQuestionItem = new dbMultipleChoiceQuestionItem();
-if (!$dbMCQuestionItem->sqlTableExists()) {
-	if (!$dbMCQuestionItem->sqlCreateTable()) {
-		$error .= sprintf('[INSTALLATION] %s', $dbMCQuestionItem->getError());
-	}
-}
-*/
 // Install Droplets
 $droplets = new checkDroplets();
 if ($droplets->insertDropletsIntoTable()) {

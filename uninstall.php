@@ -37,31 +37,15 @@ global $admin;
 
 $error = '';
 
-$dbCfg = new dbMultipleChoiceCfg();
-if ($dbCfg->sqlTableExists()) {
-	if (!$dbCfg->sqlDeleteTable()) {
-		$error .= sprintf('[UNINSTALL] %s', $dbCfg->getError());
-	}
-}
+$tables = array('dbMultipleChoiceCfg', 'dbMultipleChoiceQuestion', 'dbMultipleChoiceQuestionaire', 'dbMultipleChoiceQuestionItem');
 
-$dbMCQuestion = new dbMultipleChoiceQuestion();
-if ($dbMCQuestion->sqlTableExists()) {
-	if (!$dbMCQuestion->sqlDeleteTable()) {
-		$error .= sprintf('[UNINSTALL] %s', $dbMCQuestion->getError());
-	}
-}
-
-$dbMCQuestionaire = new dbMultipleChoiceQuestionaire();
-if ($dbMCQuestionaire->sqlTableExists()) {
-	if (!$dbMCQuestionaire->sqlDeleteTable()) {
-		$error .= sprintf('[UNINSTALL] %s', $dbMCQuestionaire->getError());
-	}
-}
-
-$dbMCQuestionItem = new dbMultipleChoiceQuestionItem();
-if ($dbMCQuestionItem->sqlTableExists()) {
-	if (!$dbMCQuestionItem->sqlDeleteTable()) {
-		$error .= sprintf('[UNINSTALL] %s', $dbMCQuestionItem->getError());
+foreach ($tables as $table) {
+	unset($delete);
+	$delete = new $table();
+	if (!$delete->sqlTableExists()) {
+		if (!$delete->sqlDeleteTable()) {
+			$error .= sprintf('[INSTALLATION] %s', $delete->getError());
+		}
 	}
 }
 
