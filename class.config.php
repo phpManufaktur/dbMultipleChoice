@@ -21,7 +21,7 @@
 // prevent this file from being accessed directly
 if (!defined('WB_PATH')) die('invalid call of '.$_SERVER['SCRIPT_NAME']);
 
-class dbMultipleChoiceCfg extends dbConnect {
+class dbMultipleChoiceCfg extends dbConnectLE {
 	
 	const field_id						= 'cfg_id';
 	const field_name					= 'cfg_name';

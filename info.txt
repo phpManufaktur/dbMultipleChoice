@@ -2,6 +2,11 @@ dbMultipleChoice - Multiple Choice Tests fuer WebsiteBaker
 (c) 2010 by phpManufaktur, Berlin (Germany)
 http://phpManufaktur.de - info@phpManufaktur.de
 
+Release 0.14
+2010-10-16
+- Changed MySQL interface to dbConnect_LE
+- use Dwoo template engine as external addon
+
 Release 0.13 
 2010-09-20
 - fixed: problem with wrong masking of strings

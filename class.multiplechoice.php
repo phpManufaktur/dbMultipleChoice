@@ -23,7 +23,7 @@ if (!defined('WB_PATH')) die('invalid call of '.$_SERVER['SCRIPT_NAME']);
 
 if (!defined('DEBUG_MODE')) define('DEBUG_MODE', true);
 
-class dbMultipleChoiceQuestionaire extends dbConnect {
+class dbMultipleChoiceQuestionaire extends dbConnectLE {
 
 	const field_id										= 'qn_id';
 	const field_name									= 'qn_name';
@@ -95,7 +95,7 @@ class dbMultipleChoiceQuestionaire extends dbConnect {
 
 } // class dbMultipleChoiceQuestionaire
 
-class dbMultipleChoiceQuestion extends dbConnect {
+class dbMultipleChoiceQuestion extends dbConnectLE {
 
 	const field_id										= 'quest_id';
 	const field_name									= 'quest_name';
@@ -173,7 +173,7 @@ class dbMultipleChoiceQuestion extends dbConnect {
 
 } // class dbMultipleChoiceQuestion
 
-class dbMultipleChoiceQuestionItem extends dbConnect {
+class dbMultipleChoiceQuestionItem extends dbConnectLE {
 
 	const field_id										= 'qi_id';
 	const field_question_id						= 'quest_id';

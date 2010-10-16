@@ -27,15 +27,23 @@ global $admin;
 
 $error = '';
 
+$tables = array('dbMultipleChoiceCfg', 'dbMultipleChoiceQuestion', 'dbMultipleChoiceQuestionaire', 'dbMultipleChoiceQuestionItem');
+
+foreach ($tables as $table) {
+	unset($create);
+	$create = new $table();
+	if (!$create->sqlTableExists()) {
+		if (!$create->sqlCreateTable()) {
+			$error .= sprintf('[INSTALLATION] %s', $create->getError());
+		}
+	}
+}
+/*
 $dbCfg = new dbMultipleChoiceCfg();
 if (!$dbCfg->sqlTableExists()) {
 	if (!$dbCfg->sqlCreateTable()) {
 		$error .= sprintf('[INSTALLATION] %s', $dbCfg->getError());
 	}
-}
-if ($dbCfg->isConnected) {
-	$dbCfg->close();
-	$dbCfg->isConnected = false;
 }
 
 $dbMCQuestion = new dbMultipleChoiceQuestion();
@@ -44,20 +52,12 @@ if (!$dbMCQuestion->sqlTableExists()) {
 		$error .= sprintf('[INSTALLATION] %s', $dbMCQuestion->getError());
 	}
 }
-if ($dbMCQuestion->isConnected) {
-	$dbMCQuestion->close();
-	$dbMCQuestion->isConnected = false;
-}
 
 $dbMCQuestionaire = new dbMultipleChoiceQuestionaire();
 if (!$dbMCQuestionaire->sqlTableExists()) {
 	if (!$dbMCQuestionaire->sqlCreateTable()) {
 		$error .= sprintf('[INSTALLATION] %s', $dbMCQuestionaire->getError());
 	}
-}
-if ($dbMCQuestionaire->isConnected) {
-	$dbMCQuestionaire->close();
-	$dbMCQuestionaire->isConnected = false;
 }
 
 $dbMCQuestionItem = new dbMultipleChoiceQuestionItem();
@@ -66,11 +66,7 @@ if (!$dbMCQuestionItem->sqlTableExists()) {
 		$error .= sprintf('[INSTALLATION] %s', $dbMCQuestionItem->getError());
 	}
 }
-if ($dbMCQuestionItem->isConnected) {
-	$dbMCQuestionItem->close();
-	$dbMCQuestionItem->isConnected = false;
-}
-
+*/
 // Install Droplets
 $droplets = new checkDroplets();
 if ($droplets->insertDropletsIntoTable()) {

@@ -43,20 +43,12 @@ if ($dbCfg->sqlTableExists()) {
 		$error .= sprintf('[UNINSTALL] %s', $dbCfg->getError());
 	}
 }
-if ($dbCfg->isConnected) {
-	$dbCfg->close();
-	$dbCfg->isConnected = false;
-}
 
 $dbMCQuestion = new dbMultipleChoiceQuestion();
 if ($dbMCQuestion->sqlTableExists()) {
 	if (!$dbMCQuestion->sqlDeleteTable()) {
 		$error .= sprintf('[UNINSTALL] %s', $dbMCQuestion->getError());
 	}
-}
-if ($dbMCQuestion->isConnected) {
-	$dbMCQuestion->close();
-	$dbMCQuestion->isConnected = false;
 }
 
 $dbMCQuestionaire = new dbMultipleChoiceQuestionaire();
@@ -65,20 +57,12 @@ if ($dbMCQuestionaire->sqlTableExists()) {
 		$error .= sprintf('[UNINSTALL] %s', $dbMCQuestionaire->getError());
 	}
 }
-if ($dbMCQuestionaire->isConnected) {
-	$dbMCQuestionaire->close();
-	$dbMCQuestionaire->isConnected = false;
-}
 
 $dbMCQuestionItem = new dbMultipleChoiceQuestionItem();
 if ($dbMCQuestionItem->sqlTableExists()) {
 	if (!$dbMCQuestionItem->sqlDeleteTable()) {
 		$error .= sprintf('[UNINSTALL] %s', $dbMCQuestionItem->getError());
 	}
-}
-if ($dbMCQuestionItem->isConnected) {
-	$dbMCQuestionItem->close();
-	$dbMCQuestionItem->isConnected = false;
 }
 
 // Prompt Errors
