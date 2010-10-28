@@ -29,7 +29,7 @@ $module_languages			= 'DE, EN';
 $module_platform      = '2.8';
 $module_author        = 'phpManufaktur, Berlin (Germany)';
 $module_license       = 'GNU General Public License';
-$module_description   = 'Contact management for WebsiteBaker';
+$module_description   = 'Multiple Choice tests for WebsiteBaker';
 $module_home          = 'http://phpmanufaktur.de';
 $module_guid          = '220B9C46-E78D-40C8-90EB-C0B3A0CD6123';
 
