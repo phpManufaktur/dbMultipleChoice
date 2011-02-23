@@ -3,7 +3,7 @@ dbMultipleChoice - Multiple Choice Tests fuer WebsiteBaker
 http://phpManufaktur.de - info@phpManufaktur.de
 
 Release 0.15
-2011-02-22
+2011-02-23
 - added: (backend) filtering the questionaires by groups
 - added: (backend) sorting the questionaire list individual with drag & drop
 - added: (backend) preselect groups of answers for questionaire
