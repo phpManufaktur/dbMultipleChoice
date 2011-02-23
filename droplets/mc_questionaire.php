@@ -5,7 +5,7 @@
  * (c) 2010 by Ralf Hertsch
  * ralf.hertsch@phpmanufaktur.de - http://phpManufaktur.de
  *
- * $Id: mc_questionaire.php 8 2010-07-18 12:56:52Z ralf $
+ * $Id$
  */
 if (file_exists(WB_PATH.'/modules/multiplechoice/class.frontend.php')) {
 	require_once(WB_PATH.'/modules/multiplechoice/class.frontend.php');

@@ -14,7 +14,7 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
 
-  $Id: class.multiplechoice.php 5 2010-07-17 14:29:51Z ralf $
+  $Id$
 
 **/
 

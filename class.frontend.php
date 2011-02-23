@@ -14,7 +14,7 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
   
-  $Id: class.frontend.php 8 2010-07-18 12:56:52Z ralf $
+  $Id$
   
 **/
 

@@ -1,4 +1,4 @@
-<!-- $Id: frontend.questionaire.htt 5 2010-07-17 14:29:51Z ralf $ -->
+<!-- $Id$ -->
 <h2>{$header}</h2>
 {$intro}
 <form name="{$form_name}" action="{$form_action}" method="post">

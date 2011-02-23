@@ -1,4 +1,4 @@
-<!-- $Id: backend.question.edit.htt 4 2010-07-17 12:04:42Z ralf $ -->
+<!-- $Id$ -->
 <h2>{$header}</h2>
 {$intro}
 <form name="{$form_name}" action="{$form_action}" method="post">

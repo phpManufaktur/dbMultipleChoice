@@ -1,4 +1,4 @@
-<!-- $Id: frontend.body.htt 4 2010-07-17 12:04:42Z ralf $ -->
+<!-- $Id$ -->
 <div class="mc_frontend">
   <div {$class|default: ''}>{$content}</div>
 </div>

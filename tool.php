@@ -14,7 +14,7 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
 
-  $Id: tool.php 6 2010-07-18 09:52:09Z ralf $
+  $Id$
 
 **/
 
