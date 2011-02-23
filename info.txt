@@ -2,6 +2,15 @@ dbMultipleChoice - Multiple Choice Tests fuer WebsiteBaker
 (c) 2010 by phpManufaktur, Berlin (Germany)
 http://phpManufaktur.de - info@phpManufaktur.de
 
+Release 0.15
+2011-02-22
+- added: (backend) filtering the questionaires by groups
+- added: (backend) sorting the questionaire list individual with drag & drop
+- added: (backend) preselect groups of answers for questionaire
+- added: (backend) sorting the questions for a questionaire in backend with drag & drop - order will be used also in frontend
+- added: (backend) remember the main fields on editing questions and use as default at the next (new) question
+- added: (backend) save hints and use them again by selecting
+
 Release 0.14
 2010-10-16
 - Changed MySQL interface to dbConnect_LE

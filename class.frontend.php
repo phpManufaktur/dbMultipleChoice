@@ -40,6 +40,7 @@ global $dbCfg;
 global $dbMCQuestion;
 global $dbMCQuestionaire;
 global $dbMCQuestionItem;
+global $dbMCTableSort;
 
 if (!is_object($parser)) $parser = new Dwoo();
 if (!is_object($tools)) $tools = new rhTools();
@@ -47,6 +48,7 @@ if (!is_object($dbCfg)) $dbCfg = new dbMultipleChoiceCfg();
 if (!is_object($dbMCQuestion)) $dbMCQuestion = new dbMultipleChoiceQuestion();
 if (!is_object($dbMCQuestionaire)) $dbMCQuestionaire = new dbMultipleChoiceQuestionaire();
 if (!is_object($dbMCQuestionItem)) $dbMCQuestionItem = new dbMultipleChoiceQuestionItem();
+if (!is_object($dbMCTableSort)) $dbMCTableSort = new dbMultipleChoiceTableSort();
 
 class multipleChoiceFrontend {
 	
@@ -192,6 +194,7 @@ class multipleChoiceFrontend {
   	global $dbMCQuestionItem;
   	global $dbMCQuestion;
   	global $parser;
+  	global $dbMCTableSort;
   	
   	if ($this->qid < 1) {
   		// keine ID angegeben
@@ -227,6 +230,18 @@ class multipleChoiceFrontend {
   	}
   	else { 
   		$order = '';	
+  		$where = array(
+  			dbMultipleChoiceTableSort::field_table	=> 'mod_mc_question',
+  			dbMultipleChoiceTableSort::field_value	=> $this->qid
+  		);
+  		$sorter = array();
+  		if (!$dbMCTableSort->sqlSelectRecord($where, $sorter)) {
+  			$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCTableSort->getError()));
+  			return false;
+  		}
+  		if (count($sorter) > 0) {
+  			$order = sprintf(" ORDER BY FIND_IN_SET(%s,'%s')", dbMultipleChoiceQuestion::field_id, $sorter[0][dbMultipleChoiceTableSort::field_order]);
+  		}
   	}
   	$SQL = sprintf(	"SELECT * FROM %s WHERE %s IN (%s) AND %s='%s'%s",
   									$dbMCQuestion->getTableName(),

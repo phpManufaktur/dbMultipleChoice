@@ -46,7 +46,8 @@ define('mc_desc_cfg_groups',										'Sie können die Fragen in beliebigen Grup
 define('mc_desc_cfg_max_items',									'Legen Sie die maximale Anzahl an möglichen Antworten je Frage fest (Limit: <b>15</b>).');
 define('mc_desc_cfg_min_items',									'Legen Sie die minimale Anzahl an möglichen Antworten je Frage fest.');
 define('mc_desc_cfg_preselect_html',						'Sie können festlegen, ob bei dem Anlegen von neuen Fragen HTML <i>für die Antworten</i> voreingestellt ist oder nicht (0=NEIN, 1=JA)');
-
+define('mc_desc_cfg_remember_question',					'Im Eingabedialog für neue Fragen die Felder Gruppe, Bezeichner und Frage merken und bei der nächsten Eingabe als Vorgabe verwenden. (1=JA, 0=NEIN)');
+ 
 define('mc_error_cfg_id',												'<p>Der Konfigurationsdatensatz mit der <b>ID %05d</b> konnte nicht ausgelesen werden!</p>');
 define('mc_error_cfg_name',											'<p>Zu dem Bezeichner <b>%s</b> wurde kein Konfigurationsdatensatz gefunden!</p>');
 define('mc_error_id_missing',										'<p>Der Datensatz mit der <b>ID %05d</b> wurde nicht gefunden.</p>');
@@ -82,7 +83,8 @@ define('mc_intro_cfg_add_item',									'<p>Das Hinzufügen von Einträgen zur K
 define('mc_intro_question_edit',								'<p>Erstellen oder Bearbeiten Sie die einzelnen Fragen und Ordnen Sie die Frage einer beliebigen Gruppe zu.</p>');
 define('mc_intro_question_list',								'<p>Wählen Sie die Frage aus, die Sie bearbeiten möchten.</p><p>Um eine neue Frage zu erstellen, klicken Sie auf den Tab <b>Bearbeiten</b>.<p>');
 define('mc_intro_questionaire_edit',						'<p>Stellen Sie einen Fragebogen mit den vorhandenen Fragen zusammen und legen Sie sein Verhalten fest.</p><p>Die zur Verfügung stehenden Fragen sind abhängig von den gewählten Gruppen und dem von Ihnen festgelegten Verhalten des Fragebogen. Sie sollten deshalb jedesmal, wenn Sie das Verhalten ändern, den Fragebogen speichern und erst anschließend die Fragen auswählen.</p>');
-define('mc_intro_questionaire_list',						'<p>Wählen Sie den Fragebogen aus, den Sie bearbeiten möchten.</p><p>Um einen neuen Fragebogen zu erstellen, klicken Sie auf den Tab <b>%s</b>.</p>');
+define('mc_intro_questionaire_list',						'<p>Wählen Sie den Fragebogen aus, den Sie bearbeiten möchten.<br />Um einen neuen Fragebogen zu erstellen, klicken Sie auf den Tab <b>%s</b>.<br />Sie können die Fragebögen per Drag & Drop beliebig sortieren, die Sortierung wird gespeichert sofern kein Filter aktiv ist.</p>');
+define('mc_intro_questionaire_questions',				'<p>Wählen Sie die Fragen aus, die im Fragebogen verwendet werden sollen.</p><p>Sie können die Fragen per Drag & Drop sortieren, wenn keine zufällige Ausgabe festgelegt ist werden die Fragen in der hier zu sehenden Reihenfolge verwendet.</p>');
 
 define('mc_label_answer_id',										'Antwort %s');
 define('mc_label_answer_is_correct',						'die Antwort ist <b>richtig</b>');
@@ -91,9 +93,14 @@ define('mc_label_cfg_groups',										'Gruppen');
 define('mc_label_cfg_max_items',								'Max. Anzahl an Vorschlägen');
 define('mc_label_cfg_min_items',								'Min. Anzahl an Vorschlägen');
 define('mc_label_cfg_preselect_html',						'Voreinstellung: HTML');
+define('mc_label_cfg_remember_question',				'Fragen bei der Eingabe merken');
 define('mc_label_csv_import',										'CSV Import');
 define('mc_label_csv_export',										'CSV Export');
 define('mc_label_description',									'Beschreibung');
+define('mc_label_filter',												'Filter');
+define('mc_label_hint_delete',									'löschen');
+define('mc_label_hint_save_as',									'Hinweis speichern unter');
+define('mc_label_hint_select',									'Hinweis auswählen');
 define('mc_label_mode',													'Verhalten');
 define('mc_label_name',													'Bezeichner');
 define('mc_label_new_id',												'- <i>neuer Datensatz</i> -');
@@ -122,6 +129,10 @@ define('mc_msg_cfg_add_incomplete',							'<p>Der neu hinzuzufügende Konfigurat
 define('mc_msg_cfg_add_success',								'<p>Der Konfigurationsdatensatz mit der <b>ID #%05d</b> und dem Bezeichner <b>%s</b> wurde hinzugefügt.</p>');
 define('mc_msg_cfg_csv_export',									'<p>Die Konfigurationsdaten wurden als <b>%s</b> im /MEDIA Verzeichnis gesichert.</p>');
 define('mc_msg_cfg_id_updated',									'<p>Der Konfigurationsdatensatz mit der <b>ID #%05d</b> und dem Bezeichner <b>%s</b> wurde aktualisiert.</p>');
+define('mc_msg_hint_deleted',										'<p>Der Hinweis mit der <b>ID %d</b> wurde entfernt.</p>');
+define('mc_msg_hint_inserted',									'<p>Der Hinweis mit der Bezeichnung <b>%s</b> wurde hinzugefügt.</p>');
+define('mc_msg_hint_inserted_locked',						'<p>Der Hinweis mit der Bezeichnung <b>%s</b> wurde hinzugefügt kann jedoch nicht in die Frage übernommen werden, da diese Fehler enthält und gesperrt ist.</p>');
+define('mc_msg_hint_usage_locked',							'<p>Der Hinweis <b>%s</b> kann nicht eingefügt werden da die Frage Fehler enthält und gesperrt ist.</p>');
 define('mc_msg_invalid_email',									'<p>Die E-Mail Adresse <b>%s</b> ist nicht gültig, bitte prüfen Sie Ihre Eingabe.</p>');
 define('mc_msg_question_item_count_multiple',		'<p>In dem von Ihnen gewählten Modus <b>%s</b> müssen Sie mind. <b>eine richtige</b> Antwort definieren.</p>');
 define('mc_msg_question_item_count_none',				'<p>In dem von Ihnen gewählten Modus <b>%s</b> ist <b>keine Antwort</b> zulässig, bitte prüfen Sie Ihre Eingaben.</p>');
@@ -136,6 +147,7 @@ define('mc_msg_question_no_group',							'<p>Sie müssen mindestens eine <b>Grup
 define('mc_msg_question_no_questions',					'<p>Es sind noch keine Fragen definiert, erstellen Sie über <b>%s</b> zunächst eine oder mehrere Fragen.</p>');
 define('mc_msg_question_name_missing',					'<p>Sie müssen einen <b>Bezeichner</b> für die Frage angeben!</p>');
 define('mc_msg_question_question_missing',			'<p>Sie müssen eine <b>Frage</b> formulieren!</p>');
+define('mc_msg_question_remembered',						'<p><b>Hinweis:</b> Sie erstellen eine <b>neue Frage</b> bei der die Felder teilweise mit den Werten der letzten Frage die Sie bearbeitet haben <b>vorbelegt</b> sind!</p>');
 define('mc_msg_question_inserted',							'<p>Der Datensatz mit der <b>ID %05d</b> wurde neu hinzugefügt.</p>');
 define('mc_msg_question_updated',								'<p>Der Datensatz mit der <b>ID %05d</b> wurde aktualisiert.</p>');
 define('mc_msg_questionaire_groups_empty',			'<p>Es sind keine <b>Gruppen</b> ausgewählt.</p><p>Bitte wählen Sie eine oder mehrere Gruppen aus. legen Sie das Verhalten des Fragebogen fest und speichern Sie den Fragebogen, damit die zur Verfügung stehenden Fragen entsprechend ausgewählt werden können.</p>');
@@ -161,6 +173,9 @@ define('mc_tab_questionaire_list',							'Übersicht');
 define('mc_tab_report',													'Auswertung');
 define('mc_tab_help',														'?');
 
-
+define('mc_text_create_new_hint',								'- neuen Hinweis erstellen -');
+define('mc_text_question_grps_select',					'Sie können eine komplette Gruppe von Fragen auswählen %s und zum Markieren auf "Übernehmen" klicken');
+define('mc_text_select',												'- bitte auswählen -');
+define('mc_text_select_filter',									'- kein Filter ausgewählt -');
 
 ?>

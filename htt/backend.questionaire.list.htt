@@ -1,14 +1,23 @@
 <!-- $Id: backend.questionaire.list.htt 4 2010-07-17 12:04:42Z ralf $ -->
 <h2>{$header}</h2>
 {$intro}
-<table width="100%">
-  <colgroup>
-    <col width="5%" />
-    <col width="25%" />
-    <col width="35%" />
-    <col width="5%" />
-    <col width="20%" />
-    <col width="10%" />
-  </colgroup>
-  {$items}
-</table>
+{$filter}
+<div id="sorter">
+  <input id="sorter_table" type="hidden" name="sorter_table" value="{$sorter_table}" />
+  <input id="sorter_value" type="hidden" name="sorter_value" value="{$sorter_value}" />
+  <input id="sorter_active" type="hidden" name="sorter_active" value="{$sorter_active}" />
+  <table width="100%">
+    <colgroup>
+      <col width="5%" />
+      <col width="25%" />
+      <col width="35%" />
+      <col width="5%" /> 
+      <col width="20%" />
+      <col width="10%" />
+    </colgroup>
+    {$head_row}
+    <tbody>
+      {$items}
+    </tbody>
+  </table>
+</div>

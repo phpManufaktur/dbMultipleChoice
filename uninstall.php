@@ -37,8 +37,9 @@ global $admin;
 
 $error = '';
 
-$tables = array('dbMultipleChoiceCfg', 'dbMultipleChoiceQuestion', 'dbMultipleChoiceQuestionaire', 'dbMultipleChoiceQuestionItem');
+$tables = array('dbMultipleChoiceCfg', 'dbMultipleChoiceQuestion', 'dbMultipleChoiceQuestionaire', 'dbMultipleChoiceQuestionItem', 'dbMultipleChoiceQuestionHint', 'dbMultipleChoiceTableSort');
 
+$delete = null;
 foreach ($tables as $table) {
 	unset($delete);
 	$delete = new $table();

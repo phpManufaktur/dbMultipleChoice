@@ -66,7 +66,7 @@ class dbMultipleChoiceQuestionaire extends dbConnectLE {
 
 	public function __construct($create_tables=false) {
 		$this->create_tables = $create_tables;
-		parent::__construct();
+		parent::__construct(); 
 		$this->setTableName('mod_mc_questionaire');
 		$this->addFieldDefinition(self::field_id, "INT(11) NOT NULL AUTO_INCREMENT", true);
 		$this->addFieldDefinition(self::field_name, "VARCHAR(80) NOT NULL DEFAULT ''");
@@ -94,7 +94,7 @@ class dbMultipleChoiceQuestionaire extends dbConnectLE {
 	} // __construct()
 
 } // class dbMultipleChoiceQuestionaire
-
+ 
 class dbMultipleChoiceQuestion extends dbConnectLE {
 
 	const field_id										= 'quest_id';
@@ -220,5 +220,84 @@ class dbMultipleChoiceQuestionItem extends dbConnectLE {
 	} // __construct()
 
 } // class dbMultipleChoiceQuestionItem
+
+class dbMultipleChoiceQuestionHint extends dbConnectLE {
+	
+	const field_id					= 'qh_id';
+	const field_group				= 'qh_group';
+	const field_name				= 'qh_name';
+	const field_hint				= 'qh_hint';
+	const field_status			= 'qh_status';
+	const field_timestamp		= 'qh_timestamp';
+	
+	const group_correct			= 1;
+	const group_false				= 2;
+	const group_partial			= 3;
+	const group_undefined		= 0;
+	
+	const status_active								= 1;
+	const status_deleted							= 0;
+
+	public $status_array = array(
+		self::status_active			=> mc_status_active,
+		self::status_deleted		=> mc_status_deleted
+	);
+
+	private $create_tables 			= false;
+
+	public function __construct($create_tables=false) {
+		$this->create_tables = $create_tables;
+		parent::__construct();
+		$this->setTableName('mod_mc_question_hint');
+		$this->addFieldDefinition(self::field_id, "INT(11) NOT NULL AUTO_INCREMENT", true);
+		$this->addFieldDefinition(self::field_group, "TINYINT NOT NULL DEFAULT '".self::group_undefined."'");
+		$this->addFieldDefinition(self::field_name, "VARCHAR(128) NOT NULL DEFAULT ''");
+		$this->addFieldDefinition(self::field_hint, "TEXT NOT NULL DEFAULT ''", false, false, true);
+		$this->addFieldDefinition(self::field_status, "TINYINT NOT NULL DEFAULT '".self::status_active."'");
+		$this->addFieldDefinition(self::field_timestamp, "TIMESTAMP");
+		$this->checkFieldDefinitions();
+		if ($this->create_tables) {
+			if (!$this->sqlTableExists()) {
+				if (!$this->sqlCreateTable()) {
+					$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $this->getError()));
+					return false;
+				}
+			}
+		}
+	} // __construct()	
+	
+} // class dbMultipleChoiceQuestionHint
+
+class dbMultipleChoiceTableSort extends dbConnectLE {
+	
+	const field_id				= 'sort_id';
+	const field_table			= 'sort_table';
+	const field_value			= 'sort_value';
+	const field_order			= 'sort_order';
+	const field_timestamp	= 'sort_timestamp';
+	
+	private $create_tables = false;
+	
+	public function __construct($create_tables=false) {
+		$this->create_tables = $create_tables;
+		parent::__construct();
+		$this->setTableName('mod_mc_table_sort');
+		$this->addFieldDefinition(self::field_id, "INT(11) NOT NULL AUTO_INCREMENT", true);
+		$this->addFieldDefinition(self::field_table, "VARCHAR(64) NOT NULL DEFAULT ''");
+		$this->addFieldDefinition(self::field_value, "VARCHAR(255) NOT NULL DEFAULT ''");
+		$this->addFieldDefinition(self::field_order, "TEXT NOT NULL DEFAULT ''");
+		$this->addFieldDefinition(self::field_timestamp, "TIMESTAMP");
+		$this->checkFieldDefinitions();
+		if ($this->create_tables) {
+			if (!$this->sqlTableExists()) {
+				if (!$this->sqlCreateTable()) {
+					$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $this->getError()));
+					return false;
+				}
+			}
+		}
+	} // __construct()	
+	
+}
 
 ?>

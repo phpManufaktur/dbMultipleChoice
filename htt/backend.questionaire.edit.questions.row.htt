@@ -1,4 +1,4 @@
-<tr class="{$flipflop}">
+<tr id="{$row_id}" class="{$flipflop}">
   <td>{$checkbox}</td>
   <td>{$id}</td>
   <td>{$name}</td>

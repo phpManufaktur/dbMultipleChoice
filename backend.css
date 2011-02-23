@@ -41,6 +41,12 @@ input[type=text].disabled {
   background-color: transparent;
   border: none;
 }
+input[name=hcnam],
+input[name=hfnam],
+input[name=hpnam]
+{
+  width: 50%;
+}
 select {
   width: 99%;
   font-size: 8pt;
@@ -50,9 +56,20 @@ select.mc_status
   width: 30%;
   font-size:8pt;
 }
+select[name=hcsel],
+select[name=hfsel],
+select[name=hpsel]
+{
+  width: 50%;
+}
+select[name=qnflt],
+select[name=qselgrp]
+{
+  width: 35%;
+}
 textarea
 {
-  width: 98%;
+  width: 98%; 
   font-size:8pt;
 }
 
@@ -163,3 +180,14 @@ textarea
 .logo {
   text-align: left;
 }
+.hcsel,
+.hfsel,
+.hpsel
+{
+  border-top: 1px solid #000;
+}
+.qnflt {
+  margin: 10px 0 10px 0;
+  text-align: right;
+}
+.odd {background: #caf2fe;}

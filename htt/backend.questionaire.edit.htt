@@ -22,18 +22,37 @@
     </tr>
     <tr><td colspan="2">&nbsp;</td></tr>
     <tr>
+      <td>&nbsp;</td>
+      <td>{$questions_intro}</td>
+    </tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
+    <tr>
       <td colspan="2">
-        <table width="100%">
-          <colgroup>
-            <col width="5%" />
-            <col width="5%" />
-            <col width="25%" />
-            <col width="45%" />
-            <col width="20%" />
-          </colgroup>
-          {$questions}
-        </table>
+        <div id="response">RESPONSE</div>
+        <div id="sorter">
+          <input id="sorter_table" type="hidden" name="sorter_table" value="{$sorter_table}" />
+          <input id="sorter_value" type="hidden" name="sorter_value" value="{$sorter_value}" />
+          <input id="sorter_active" type="hidden" name="sorter_active" value="{$sorter_active}" />
+          <table width="100%">
+            <colgroup>
+              <col width="5%" />
+              <col width="5%" />
+              <col width="25%" />
+              <col width="45%" />
+              <col width="20%" />
+            </colgroup>
+            {$questions_header}
+            <tbody>
+            {$questions}
+            </tbody>
+          </table>
+        </div>
       </td>
+    </tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td style="vertical-align: top;">{$question_groups}</td>
     </tr>
     <tr><td colspan="2">&nbsp;</td></tr>
     <tr>

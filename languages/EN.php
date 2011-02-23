@@ -46,6 +46,7 @@ define('mc_desc_cfg_groups',										'You may organize the questions in any gro
 define('mc_desc_cfg_max_items',									'Define the maximum number of possible answers per question (Limit: <b>15</b>).');
 define('mc_desc_cfg_min_items',									'Define the minimum number of possible answers per question.');
 define('mc_desc_cfg_preselect_html',						'Define whether HTML is preset <i>for answers</i> when creating new questions (0=NO, 1=YES).');
+define('mc_desc_cfg_remember_question',					'Im Eingabedialog für neue Fragen die Felder Gruppe, Bezeichner und Frage merken und bei der nächsten Eingabe als Vorgabe verwenden. (1=JA, 0=NEIN)');
 
 define('mc_error_cfg_id',												'<p>Configuration data record with <b>ID %05d</b> could not be read!</p>');
 define('mc_error_cfg_name',											'<p>For identifier <b>%s</b> no configuration data record was found!</p>');
@@ -83,6 +84,7 @@ define('mc_intro_question_edit',								'<p>Create or edit the individual questi
 define('mc_intro_question_list',								'<p>Select the question you want to edit.</p><p>In order to create a new question select tab <b>Edit</b>.<p>');
 define('mc_intro_questionaire_edit',						'<p>Compile a questionnaire with the questions available and define its behaviour.</p><p>Availability of individual questions is depending on groups selected and the behaviour of the questionnaire that you definded. Therefor you should save the questionnaire after each modification of the behaviour and selcet the questions subsequently.</p>');
 define('mc_intro_questionaire_list',						'<p>Select the questionnaire you want to edit.</p><p>In order to create a new questionnaire select tab <b>%s</b>.</p>');
+define('mc_intro_questionaire_questions',				'<p>Wählen Sie die Fragen aus, die im Fragebogen verwendet werden sollen.</p><p>Sie können die Fragen per Drag & Drop sortieren, wenn keine zufällige Ausgabe festgelegt ist werden die Fragen in der hier zu sehenden Reihenfolge verwendet.</p>');
 
 define('mc_label_answer_id',										'Answer %s');
 define('mc_label_answer_is_correct',						'the answer is <b>correct</b>');
@@ -91,9 +93,14 @@ define('mc_label_cfg_groups',										'Group');
 define('mc_label_cfg_max_items',								'Max. number of proposals');
 define('mc_label_cfg_min_items',								'Min. number of proposals');
 define('mc_label_cfg_preselect_html',						'Preset: HTML');
+define('mc_label_cfg_remember_question',				'Fragen bei der Eingabe merken');
 define('mc_label_csv_import',										'CSV Import');
 define('mc_label_csv_export',										'CSV Export');
 define('mc_label_description',									'Description');
+define('mc_label_filter',												'Filter');
+define('mc_label_hint_delete',									'löschen');
+define('mc_label_hint_save_as',									'Hinweis speichern unter');
+define('mc_label_hint_select',									'Hinweis auswählen');
 define('mc_label_mode',													'Mode');
 define('mc_label_name',													'Name');
 define('mc_label_new_id',												'- <i>new data record</i> -');
@@ -122,6 +129,10 @@ define('mc_msg_cfg_add_incomplete',							'<p>The newly created configration dat
 define('mc_msg_cfg_add_success',								'<p>The configuration data record with <b>ID #%05d</b> and name <b>%s</b> has been added.</p>');
 define('mc_msg_cfg_csv_export',									'<p>The configuration data hhave been saved as <b>%s</b> in /MEDIA directory.</p>');
 define('mc_msg_cfg_id_updated',									'<p>The configuration data record with <b>ID #%05d</b> and name <b>%s</b> has been updated.</p>');
+define('mc_msg_hint_deleted',										'<p>Der Hinweis mit der <b>ID %d</b> wurde entfernt.</p>');
+define('mc_msg_hint_inserted',									'<p>Der Hinweis mit der Bezeichnung <b>%s</b> wurde hinzugefügt.</p>');
+define('mc_msg_hint_inserted_locked',						'<p>Der Hinweis mit der Bezeichnung <b>%s</b> wurde hinzugefügt kann jedoch nicht in die Frage übernommen werden, da diese Fehler enthält und gesperrt ist.</p>');
+define('mc_msg_hint_usage_locked',							'<p>Der Hinweis <b>%s</b> kann nicht eingefügt werden da die Frage Fehler enthält und gesperrt ist.</p>');
 define('mc_msg_invalid_email',									'<p>The e-mail addresss <b>%s</b> is invalid. Please check your entry!</p>');
 define('mc_msg_question_item_count_multiple',		'<p>In the mode you selected (<b>%s</b>) you have to define at least <b>one correct</b> answer!</p>');
 define('mc_msg_question_item_count_none',				'<p>In the mode you selected (<b>%s</b>) there is <b>no answer</b> allowed. Please check your entries!</p>');
@@ -136,6 +147,7 @@ define('mc_msg_question_no_group',							'<p>You have to select at least one <b>
 define('mc_msg_question_no_questions',					'<p>There are no questions definet yet. Please create one or more questions by means of <b>%s</b>.</p>');
 define('mc_msg_question_name_missing',					'<p>You have do enter an <b>identifier</b> for the question!</p>');
 define('mc_msg_question_question_missing',			'<p>Please enter a <b>question</b>!</p>');
+define('mc_msg_question_remembered',						'<p><b>Hinweis:</b> Sie erstellen eine neue Frage bei der die Felder teilweise mit den Werten der letzten Frage die Sie bearbeitet haben vorbelegt sind!</p>');
 define('mc_msg_question_inserted',							'<p>The data record with <b>ID %05d</b> has been added.</p>');
 define('mc_msg_question_updated',								'<p>The data record with <b>ID %05d</b> has been updated.</p>');
 define('mc_msg_questionaire_groups_empty',			'<p>No <b>groups</b> are selected.</p><p>Please select one or more groups, define the behaviour of the questionnaire, and save the questionnaire so the available questions may be selected.</p>');
@@ -161,6 +173,9 @@ define('mc_tab_questionaire_list',							'List of questionnaires');
 define('mc_tab_report',													'Report');
 define('mc_tab_help',														'?');
 
-
+define('mc_text_create_new_hint',								'- create new hint -');
+define('mc_text_question_grps_select',					'komplette Gruppe von Fragen auswählen: %s und zum Markieren auf "Übernehmen" klicken');
+define('mc_text_select',												'- bitte auswählen -');
+define('mc_text_select_filter',									'- kein Filter ausgewählt -');
 
 ?>

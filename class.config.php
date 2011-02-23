@@ -66,13 +66,15 @@ class dbMultipleChoiceCfg extends dbConnectLE {
   const cfgMinItems					= 'cfgMinItems';
   const cfgGroups						= 'cfgGroups';
   const cfgPreselectHTML		= 'cfgPreselectHTML';
+  const cfgRememberQuestion	= 'cfgRememberQuestion';
   
   public $config_array = array(
   	//array('kit_label_cfg_developer_mode', self::cfgDeveloperMode, self::type_boolean, 0, 'kit_desc_cfg_developer_mode'),
   	array('mc_label_cfg_max_items', self::cfgMaxItems, self::type_integer, 5, 'mc_desc_cfg_max_items'),
   	array('mc_label_cfg_min_items', self::cfgMinItems, self::type_integer, 3, 'mc_desc_cfg_min_items'),
   	array('mc_label_cfg_groups', self::cfgGroups, self::type_array, 'Default', 'mc_desc_cfg_groups'),
-  	array('mc_label_cfg_preselect_html', self::cfgPreselectHTML, self::type_boolean, 0, 'mc_desc_cfg_preselect_html')
+  	array('mc_label_cfg_preselect_html', self::cfgPreselectHTML, self::type_boolean, 0, 'mc_desc_cfg_preselect_html'),
+  	array('mc_label_cfg_remember_question', self::cfgRememberQuestion, self::type_boolean, 0, 'mc_desc_cfg_remember_question')
   );  
   
   public function __construct($createTables = false) {

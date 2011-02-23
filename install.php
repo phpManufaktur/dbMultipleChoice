@@ -27,8 +27,9 @@ global $admin;
 
 $error = '';
 
-$tables = array('dbMultipleChoiceCfg', 'dbMultipleChoiceQuestion', 'dbMultipleChoiceQuestionaire', 'dbMultipleChoiceQuestionItem');
+$tables = array('dbMultipleChoiceCfg', 'dbMultipleChoiceQuestion', 'dbMultipleChoiceQuestionaire', 'dbMultipleChoiceQuestionItem', 'dbMultipleChoiceQuestionHint', 'dbMultipleChoiceTableSort');
 
+$create = null; 
 foreach ($tables as $table) {
 	unset($create);
 	$create = new $table();

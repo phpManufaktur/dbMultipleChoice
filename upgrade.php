@@ -26,6 +26,20 @@ $error = '';
 
 global $admin;
 
+$dbMCHint = new dbMultipleChoiceQuestionHint();
+if (!$dbMCHint->sqlTableExists()) {
+	if (!$dbMCHint->sqlCreateTable()) {
+		$error .= sprintf('[UPGRADE] %s', $dbMCHint->getError());
+	}
+}
+
+$dbMCTableSort = new dbMultipleChoiceTableSort();
+if (!$dbMCTableSort->sqlTableExists()) {
+	if (!$dbMCTableSort->sqlCreateTable()) {
+		$error .= sprintf('[UPGRADE] %s', $dbMCTableSort->getError());
+	}
+}
+
 // Prompt Errors
 if (!empty($error)) {
 	$admin->print_error($error);

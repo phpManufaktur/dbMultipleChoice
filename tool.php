@@ -39,6 +39,8 @@ global $dbCfg;
 global $dbMCQuestion;
 global $dbMCQuestionaire;
 global $dbMCQuestionItem;
+global $dbMCQuestionHint;
+global $dbMCTableSort;
 
 if (!is_object($parser)) $parser = new Dwoo();
 if (!is_object($tools)) $tools = new rhTools();
@@ -46,6 +48,8 @@ if (!is_object($dbCfg)) $dbCfg = new dbMultipleChoiceCfg();
 if (!is_object($dbMCQuestion)) $dbMCQuestion = new dbMultipleChoiceQuestion();
 if (!is_object($dbMCQuestionaire)) $dbMCQuestionaire = new dbMultipleChoiceQuestionaire();
 if (!is_object($dbMCQuestionItem)) $dbMCQuestionItem = new dbMultipleChoiceQuestionItem();
+if (!is_object($dbMCQuestionHint)) $dbMCQuestionHint = new dbMultipleChoiceQuestionHint();
+if (!is_object($dbMCTableSort)) $dbMCTableSort = new dbMultipleChoiceTableSort();
 
 $mcBackend = new mcBackend();
 $mcBackend->action();
@@ -59,6 +63,20 @@ class mcBackend {
 	const request_items										= 'its';
 	const request_question_tab						= 'qt';
 	const request_questionaire_tab				= 'qnt';
+	const request_hint_correct_select			= 'hcsel';
+	const request_hint_correct_save				= 'hcsav';
+	const request_hint_correct_delete			= 'hcdel';
+	const request_hint_correct_name				= 'hcnam';
+	const request_hint_false_select				= 'hfsel';
+	const request_hint_false_save					= 'hfsav';
+	const request_hint_false_name					= 'hfnam';
+	const request_hint_false_delete				= 'hfdel';
+	const request_hint_partial_select			= 'hpsel';
+	const request_hint_partial_save				= 'hpsav';
+	const request_hint_partial_name				= 'hpnam';
+	const request_hint_partial_delete			= 'hpdel';
+	const request_questionaire_filter			= 'qnflt';
+	const request_question_select_grps		= 'qselgrp';
 
 	const action_default									= 'def';
 	const action_help											= 'hlp';
@@ -628,6 +646,8 @@ class mcBackend {
 		global $dbMCQuestionItem;
 		global $dbCfg;
 		global $parser;
+		global $dbMCQuestionHint;
+
 		(isset($_REQUEST[dbMultipleChoiceQuestion::field_id])) ? $qid = $_REQUEST[dbMultipleChoiceQuestion::field_id] : $qid = -1;
 
 		// Gruppen auslesen
@@ -661,6 +681,15 @@ class mcBackend {
 			$question[dbMultipleChoiceQuestion::field_groups] = $groups[0]; // erste Gruppe = DEFAULT
 			$question[dbMultipleChoiceQuestion::field_use_html]	= (int) $preselect_html;
 			$question[dbMultipleChoiceQuestion::field_mode] = dbMultipleChoiceQuestion::mode_multiple;
+			if ($dbCfg->getValue(dbMultipleChoiceCfg::cfgRememberQuestion)) {
+				// Daten aus der letzten Frage als Vorgabe verwenden
+				if (isset($_SESSION[dbMultipleChoiceQuestion::field_groups])) $question[dbMultipleChoiceQuestion::field_groups] = $_SESSION[dbMultipleChoiceQuestion::field_groups];
+				if (isset($_SESSION[dbMultipleChoiceQuestion::field_name])) $question[dbMultipleChoiceQuestion::field_name] = $_SESSION[dbMultipleChoiceQuestion::field_name];
+				if (isset($_SESSION[dbMultipleChoiceQuestion::field_question])) $question[dbMultipleChoiceQuestion::field_question] = $_SESSION[dbMultipleChoiceQuestion::field_question];
+				$message = $this->getMessage();
+				$message .= mc_msg_question_remembered;
+				$this->setMessage($message);
+			}
 		}
 		// $_REQUEST pruefen...
 		foreach ($dbMCQuestion->getFields() as $key => $value) {
@@ -844,17 +873,65 @@ class mcBackend {
 			ob_end_clean();
 			switch ($prompt):
 			case dbMultipleChoiceQuestion::field_prompt_correct:
-				$label = mc_label_prompt_correct; break;
+				$label = mc_label_prompt_correct;
+				$hint_grp = dbMultipleChoiceQuestionHint::group_correct; 
+				$hint_select = self::request_hint_correct_select;
+				$hint_name = self::request_hint_correct_name;
+				$hint_save = self::request_hint_correct_save;
+				$hint_delete = self::request_hint_correct_delete;
+				break;
 			case dbMultipleChoiceQuestion::field_prompt_false:
-				$label = mc_label_prompt_false; break;
+				$label = mc_label_prompt_false; 
+				$hint_grp = dbMultipleChoiceQuestionHint::group_false;
+				$hint_select = self::request_hint_false_select;
+				$hint_name = self::request_hint_false_name;
+				$hint_save = self::request_hint_false_save;
+				$hint_delete = self::request_hint_false_delete;
+				break;
 			case dbMultipleChoiceQuestion::field_prompt_partial:
-				$label = mc_label_prompt_partial; break;
-			default:
-				$label = mc_label_undefined; break;
+				$label = mc_label_prompt_partial; 
+				$hint_grp = dbMultipleChoiceQuestionHint::group_partial;
+				$hint_select = self::request_hint_partial_select;
+				$hint_name = self::request_hint_partial_name;
+				$hint_save = self::request_hint_partial_save;
+				$hint_delete = self::request_hint_partial_delete;
+				break;
 			endswitch;
+			// Hinweise auslesen
+			$SQL = sprintf( "SELECT %s, %s FROM %s WHERE %s='%s' AND %s='%s'",
+											dbMultipleChoiceQuestionHint::field_name,
+											dbMultipleChoiceQuestionHint::field_id,
+											$dbMCQuestionHint->getTableName(),
+											dbMultipleChoiceQuestionHint::field_group,
+											$hint_grp,
+											dbMultipleChoiceQuestionHint::field_status,
+											dbMultipleChoiceQuestionHint::status_active);
+			$hints = array();
+			if (!$dbMCQuestionHint->sqlExec($SQL, $hints)) {
+				$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCQuestionHint->getError()));
+				return false;
+			}
+			$select = sprintf('<option value="%s">%s</option>', -1, mc_text_create_new_hint);
+			foreach ($hints as $hint) {
+				$selected = (isset($_REQUEST[$hint_select]) && ($_REQUEST[$hint_select] == $hint[dbMultipleChoiceQuestionHint::field_id])) ? ' selected="selected"' : '';
+				$select .= sprintf('<option value="%s"%s>%s</option>', $hint[dbMultipleChoiceQuestionHint::field_id], $selected, $hint[dbMultipleChoiceQuestionHint::field_name]);
+			}
+			$select = sprintf('<div class="%s">%s: <select name="%s">%s</select> <input type="checkbox" name="%s" /> %s</div>', 
+												$hint_select,
+												mc_label_hint_select,
+												$hint_select, 
+												$select,
+												$hint_delete,
+												mc_label_hint_delete);
+			$name = sprintf('<div class="%s"><input type="checkbox" name="%s" /> %s <input type="text" name="%s" /></div>',
+											$hint_save,
+											$hint_save,
+											mc_label_hint_save_as,
+											$hint_name);
+			
 			$data = array(
 				'label'		=> $label,
-				'value'		=> $editor
+				'value'		=> $select.$editor.$name
 			);
 			$items .= $parser->get($row, $data);
 		}
@@ -911,6 +988,7 @@ class mcBackend {
 		global $dbCfg;
 		global $dbMCQuestion;
 		global $dbMCQuestionItem;
+		global $dbMCQuestionHint;
 		global $tools;
 
 		$message = '';
@@ -1078,6 +1156,83 @@ class mcBackend {
 				break;
 		endswitch;
 
+		// Handling fuer HINTs
+		$hints_selected = array(self::request_hint_correct_select, self::request_hint_false_select, self::request_hint_partial_select);
+		foreach ($hints_selected as $hint_select) {
+			switch ($hint_select):
+			case self::request_hint_correct_select:
+				$hint_delete = (isset($_REQUEST[self::request_hint_correct_delete])) ? true : false;
+				$hint_save = (isset($_REQUEST[self::request_hint_correct_save])) ? true : false;
+				$hint_name = (isset($_REQUEST[self::request_hint_correct_name])) ? $_REQUEST[self::request_hint_correct_name] : '';
+				$hint_group = dbMultipleChoiceQuestionHint::group_correct;
+				$prompt = dbMultipleChoiceQuestion::field_prompt_correct;
+				break;
+			case self::request_hint_false_select:
+				$hint_delete = (isset($_REQUEST[self::request_hint_false_delete])) ? true : false;
+				$hint_save = (isset($_REQUEST[self::request_hint_false_save])) ? true : false;
+				$hint_name = (isset($_REQUEST[self::request_hint_false_name])) ? $_REQUEST[self::request_hint_false_name] : '';
+				$hint_group = dbMultipleChoiceQuestionHint::group_false;
+				$prompt = dbMultipleChoiceQuestion::field_prompt_false;
+				break;
+			case self::request_hint_partial_select:
+				$hint_delete = (isset($_REQUEST[self::request_hint_partial_delete])) ? true : false;
+				$hint_save = (isset($_REQUEST[self::request_hint_partial_save])) ? true : false;
+				$hint_name = (isset($_REQUEST[self::request_hint_partial_name])) ? $_REQUEST[self::request_hint_partial_name] : '';
+				$hint_group = dbMultipleChoiceQuestionHint::group_partial;
+				$prompt = dbMultipleChoiceQuestion::field_prompt_partial;
+				break;
+			endswitch;
+			if (isset($_REQUEST[$hint_select]) && ($_REQUEST[$hint_select] != -1)) { 
+				// Hint verwenden
+				$hint_id = $_REQUEST[$hint_select];
+				if ($hint_delete) {
+					// Eintrag soll geloescht werden
+					$data = array(dbMultipleChoiceQuestionHint::field_status => dbMultipleChoiceQuestionHint::status_deleted);
+					$where = array(dbMultipleChoiceQuestionHint::field_id => $hint_id);
+					if (!$dbMCQuestionHint->sqlUpdateRecord($data, $where)) {
+						$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCQuestionHint->getError()));
+						return false;
+					}
+					$message .= sprintf(mc_msg_hint_deleted, $hint_id);
+				}
+				else { 
+					// Hint soll verwendet werden
+					$where = array(dbMultipleChoiceQuestionHint::field_id => $hint_id);
+					$hint_data = array();
+					if (!$dbMCQuestionHint->sqlSelectRecord($where, $hint_data)) {
+						$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCQuestionHint->getError()));
+						return false;
+					}
+					if (count($hint_data) < 1) {
+						$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, sprintf(mc_error_id_missing, $hint_id)));
+						return false;
+					}
+					if ($is_checked || ($question[dbMultipleChoiceQuestion::field_status] == dbMultipleChoiceQuestion::status_active)) {
+						$question[$prompt] = $hint_data[0][dbMultipleChoiceQuestionHint::field_hint];
+						unset($_REQUEST[$prompt]);
+						unset($_REQUEST[$hint_select]);
+					}
+					else { 
+						$message .= sprintf(mc_msg_hint_usage_locked, $hint_data[0][dbMultipleChoiceQuestionHint::field_name]);
+					}
+				}
+			}
+			elseif ($hint_save && !empty($hint_name)) {
+				// Prompt soll als Hinweis gesichert werden
+				$data = array(
+					dbMultipleChoiceQuestionHint::field_group 	=> $hint_group,
+					dbMultipleChoiceQuestionHint::field_hint 		=> $question[$prompt],
+					dbMultipleChoiceQuestionHint::field_name 		=> $hint_name,
+					dbMultipleChoiceQuestionHint::field_status 	=> dbMultipleChoiceQuestionHint::status_active
+				);
+				$hint_id = -1;
+				if (!$dbMCQuestionHint->sqlInsertRecord($data, $hint_id)) {
+					$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCQuestionHint->getError()));
+					return false;
+				}
+				$message .= ($is_checked) ? sprintf(mc_msg_hint_inserted, $hint_name) : sprintf(mc_msg_hint_inserted_locked, $hint_name);
+			}
+		} 
 		// Datensatz uebernehmen
 		$question[dbMultipleChoiceQuestion::field_answers] = implode(',', $answers);
 		$question[dbMultipleChoiceQuestion::field_solutions] = implode(',', $solutions);
@@ -1110,6 +1265,13 @@ class mcBackend {
 			$message .= sprintf(mc_msg_question_updated, $_REQUEST[dbMultipleChoiceQuestion::field_id]);
 		}
 
+		// Sollen Fragen gemerkt werden?
+		if ($dbCfg->getValue(dbMultipleChoiceCfg::cfgRememberQuestion)) {
+			$_SESSION[dbMultipleChoiceQuestion::field_groups] = $question[dbMultipleChoiceQuestion::field_groups];
+			$_SESSION[dbMultipleChoiceQuestion::field_name] = $question[dbMultipleChoiceQuestion::field_name];
+			$_SESSION[dbMultipleChoiceQuestion::field_question] = $question[dbMultipleChoiceQuestion::field_question];
+		}
+		
 		$this->setMessage($message);
 
 		// $_REQUEST zuruecksetzen?
@@ -1162,15 +1324,123 @@ class mcBackend {
   public function dlgQuestionaireList() {
   	global $dbMCQuestionaire;
   	global $parser;
-  	$SQL = sprintf(	"SELECT * FROM %s WHERE %s!='%s'",
-  									$dbMCQuestionaire->getTableName(),
-  									dbMultipleChoiceQuestionaire::field_status,
-  									dbMultipleChoiceQuestionaire::status_deleted);
-  	$questionaires = array();
-  	if (!$dbMCQuestionaire->sqlExec($SQL, $questionaires)) {
-  		$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCQuestionaire->getError()));
-  		return false;
+  	global $dbCfg;
+  	global $dbMCTableSort;
+  	
+  	// Gruppen auslesen
+  	$groups = $dbCfg->getValue(dbMultipleChoiceCfg::cfgGroups);
+  	asort($groups);
+  	$sorter_active = 1;
+  	$sorter_table = str_replace(TABLE_PREFIX, '', $dbMCQuestionaire->getTableName());
+  	if (isset($_REQUEST[self::request_questionaire_filter]) && ($_REQUEST[self::request_questionaire_filter] != -1)) {
+  		// nach Gruppe filtern - keine Sortierung aktivieren!
+  		$sorter_active = 0;
+  		$group = $groups[$_REQUEST[self::request_questionaire_filter]];
+  		$sql = sprintf( "SELECT * FROM %s WHERE %s!='%s' AND (%s LIKE '%s' OR %s LIKE '%s,%%' OR %s LIKE '%%,%s' OR %s LIKE '%%,%s,%%')",
+  										$dbMCQuestionaire->getTableName(),
+  										dbMultipleChoiceQuestionaire::field_status,
+  										dbMultipleChoiceQuestionaire::status_deleted,
+  										dbMultipleChoiceQuestionaire::field_groups,
+  										$group,
+  										dbMultipleChoiceQuestionaire::field_groups,
+  										$group,
+  										dbMultipleChoiceQuestionaire::field_groups,
+  										$group,
+  										dbMultipleChoiceQuestionaire::field_groups,
+  										$group  										
+  									);
+	  	$questionaires = array();
+	  	if (!$dbMCQuestionaire->sqlExec($sql, $questionaires)) {
+	  		$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCQuestionaire->getError()));
+	  		return false;
+	  	}
   	}
+  	else {
+  		// zusaetzliches Handling um die Sortierung der Tabelle zu ermoeglichen
+  		$sql = sprintf( "SELECT %s FROM %s WHERE %s!='%s'",
+  										dbMultipleChoiceQuestionaire::field_id,
+	  									$dbMCQuestionaire->getTableName(),
+	  									dbMultipleChoiceQuestionaire::field_status,
+	  									dbMultipleChoiceQuestionaire::status_deleted);
+	  	$quests = array();
+	  	if (!$dbMCQuestionaire->sqlExec($sql, $quests)) {
+	  		$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCQuestionaire->getError()));
+	  		return false;
+	  	}
+	  	$must_ids = array();
+	  	foreach ($quests as $id) {
+	  		$must_ids[] = $id[dbMultipleChoiceQuestionaire::field_id];
+	  	}
+	  	$where = array(dbMultipleChoiceTableSort::field_table => $sorter_table);
+	  	$sorter = array();
+			if (!$dbMCTableSort->sqlSelectRecord($where, $sorter)) {
+				$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCTableSort->getError()));
+				return false;
+			}
+			if (count($sorter) < 1) {
+				// Eintrag existiert noch nicht!
+				$sorter_set = implode(',', $must_ids);
+				$data = array(
+					dbMultipleChoiceTableSort::field_table => $sorter_table,
+					dbMultipleChoiceTableSort::field_value => -1,
+					dbMultipleChoiceTableSort::field_order => $sorter_set
+				);
+				if (!$dbMCTableSort->sqlInsertRecord($data)) {
+					$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCTableSort->getError()));
+					return false;
+				} 
+			}
+			else {
+				// Eintrag auf Unterschiede pruefen und Datensatz wieder aktualisieren
+				$sorter_ids = explode(',', $sorter[0][dbMultipleChoiceTableSort::field_order]);
+				$old = $sorter_ids;
+				$check = array_diff($must_ids, $sorter_ids);
+				foreach ($check as $id) $sorter_ids[] = $id;
+				$check = array_diff($sorter_ids, $must_ids);
+				foreach ($check as $id) unset($sorter_ids[$id]);
+				$sorter_set = implode(',', $sorter_ids);
+				if ($old !== $sorter_ids) {
+					$where = array(dbMultipleChoiceTableSort::field_id => $sorter[0][dbMultipleChoiceTableSort::field_id]);
+					$data = array(dbMultipleChoiceTableSort::field_order => $sorter_set);
+					if (!$dbMCTableSort->sqlUpdateRecord($data, $where)) {
+						$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCTableSort->getError()));
+						return false;
+					}
+				}
+			}
+			$sql = sprintf(	"SELECT * FROM %s WHERE %s!='%s' ORDER BY FIND_IN_SET(%s, '%s')",
+											$dbMCQuestionaire->getTableName(),
+											dbMultipleChoiceQuestionaire::field_status,
+											dbMultipleChoiceQuestionaire::status_deleted,
+											dbMultipleChoiceQuestionaire::field_id,
+											$sorter_set);
+			$questionaires = array();
+			if (!$dbMCQuestionaire->sqlExec($sql, $questionaires)) {
+				$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCQuestionaire->getError()));
+				return false;
+			}	  	
+  	}
+  	
+  	// Filter
+  	$filter = sprintf('<option value="%s">%s</option>', -1, mc_text_select_filter);
+  	foreach ($groups as $key => $value) {
+  		$selected = (isset($_REQUEST[self::request_questionaire_filter]) && ($_REQUEST[self::request_questionaire_filter] == $key)) ? ' selected="selected"' : '';
+  		$filter .= sprintf('<option value="%s"%s>%s</option>', $key, $selected, $value);
+  	}
+  	
+  	$filter = sprintf('<div class="%s">%s: <select name="%s" onchange="javascript: window.location = \'%s\'+this.value; return false;">%s</select></div>', 
+  										self::request_questionaire_filter,
+  										mc_label_filter,
+  										self::request_questionaire_filter, 
+  										sprintf('%s&%s=%s&%s=%s&%s=',
+  														$this->page_link,
+  														self::request_action,
+  														self::action_questionaire,
+  														self::request_questionaire_tab,
+  														self::action_question_tab_list,
+  														self::request_questionaire_filter),
+  										$filter);
+  	
   	$items = '';
 		if (count($questionaires) < 1) {
 			// es sind noch keine Fragebögen definiert
@@ -1185,7 +1455,7 @@ class mcBackend {
 				'groups'				=> mc_header_groups,
 				'status'				=> mc_header_status
 			);
-			$items .= $parser->get($this->template_path.'backend.questionaire.list.header.htt', $data);
+			$header = $parser->get($this->template_path.'backend.questionaire.list.header.htt', $data);
 		}
 		$row = new Dwoo_Template_File($this->template_path.'backend.questionaire.list.row.htt');
 		$flipflop = true;
@@ -1197,6 +1467,7 @@ class mcBackend {
 			$sum_arr = explode(',', $questionaire[dbMultipleChoiceQuestionaire::field_questions]);
 			(!empty($sum_arr[0])) ? $count = count($sum_arr) : $count = 0;
 			$data = array(
+				'row_id'			=> 'rowID_'.$questionaire[dbMultipleChoiceQuestionaire::field_id],
 				'flipflop'		=> $flipper,
 				'id'					=> sprintf('<span class="%s">%s</span>',
 																	$class,
@@ -1231,7 +1502,12 @@ class mcBackend {
 		$data = array(
 			'header'				=> mc_header_questionaire_list,
 			'intro'					=> $intro,
-			'items'					=> $items
+			'head_row'			=> $header,
+			'items'					=> $items,
+			'filter'				=> $filter,
+			'sorter_table'	=> $sorter_table,
+			'sorter_value'	=> -1,
+			'sorter_active'	=> $sorter_active
 		);
 		return $parser->get($this->template_path.'backend.questionaire.list.htt', $data);
   } // dlgQuestionaireList()
@@ -1246,6 +1522,7 @@ class mcBackend {
   	global $dbMCQuestionaire;
   	global $dbMCQuestion;
   	global $dbCfg;
+  	global $dbMCTableSort;
 
   	(isset($_REQUEST[dbMultipleChoiceQuestionaire::field_id])) ? $qid = $_REQUEST[dbMultipleChoiceQuestionaire::field_id] : $qid = -1;
 
@@ -1392,6 +1669,9 @@ class mcBackend {
 		);
 		$items .= $parser->get($row, $data);
 
+		// Intro fuer die Fragenauswahl
+		$quests_intro = sprintf('<div class="intro">%s</div>', mc_intro_questionaire_questions);
+		
   	$quests = '';
   	if (empty($questionaire[dbMultipleChoiceQuestionaire::field_groups])) {
   		// keine Gruppen festgelegt
@@ -1414,8 +1694,12 @@ class mcBackend {
   			$like .= sprintf(	'%1$s LIKE \'%2$s\' OR %1$s LIKE \'%2$s,%%\' OR %1$s LIKE \'%%,%2$s\' OR %1$s LIKE \'%%,%2$s,%%\'',
   												dbMultipleChoiceQuestion::field_groups, $grp); 
   		}
-  		
-  		$SQL = sprintf(	"SELECT * FROM %s WHERE %s='%s'%s AND (%s)",
+  		// zusaetzliches Handling fuer die Drag & Drop Sortierung
+  		$sorter_table = 'mod_mc_question';
+  		$sorter_value = $qid;
+  		$sorter_active = 1;
+  		$SQL = sprintf(	"SELECT %s FROM %s WHERE %s='%s'%s AND (%s)",
+  										dbMultipleChoiceQuestion::field_id,
   										$dbMCQuestion->getTableName(),
   										dbMultipleChoiceQuestion::field_status,
   										dbMultipleChoiceQuestion::status_active,
@@ -1426,6 +1710,63 @@ class mcBackend {
   			$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCQuestion->getError()));
   			return false;
   		}
+  		$must_ids = array();
+	  	foreach ($questions as $id) {
+	  		$must_ids[] = $id[dbMultipleChoiceQuestion::field_id];
+	  	}
+	  	$where = array(
+	  		dbMultipleChoiceTableSort::field_table 	=> $sorter_table,
+	  		dbMultipleChoiceTableSort::field_value	=> $sorter_value);
+	  	$sorter = array();
+			if (!$dbMCTableSort->sqlSelectRecord($where, $sorter)) {
+				$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCTableSort->getError()));
+				return false;
+			}
+			if (count($sorter) < 1) {
+				// Eintrag existiert noch nicht!
+				$sorter_set = implode(',', $must_ids);
+				$data = array(
+					dbMultipleChoiceTableSort::field_table => $sorter_table,
+					dbMultipleChoiceTableSort::field_value => $sorter_value,
+					dbMultipleChoiceTableSort::field_order => $sorter_set
+				);
+				if (!$dbMCTableSort->sqlInsertRecord($data)) {
+					$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCTableSort->getError()));
+					return false;
+				} 
+			}
+			else {
+				// Eintrag auf Unterschiede pruefen und Datensatz aktualisieren
+				$sorter_ids = explode(',', $sorter[0][dbMultipleChoiceTableSort::field_order]);
+				$old = $sorter_ids;
+				$check = array_diff($must_ids, $sorter_ids);
+				foreach ($check as $id) $sorter_ids[] = $id;
+				$check = array_diff($sorter_ids, $must_ids);
+				foreach ($check as $id) unset($sorter_ids[$id]);
+				$sorter_set = implode(',', $sorter_ids);
+				if ($old !== $sorter_ids) {
+					$where = array(dbMultipleChoiceTableSort::field_id => $sorter[0][dbMultipleChoiceTableSort::field_id]);
+					$data = array(dbMultipleChoiceTableSort::field_order => $sorter_set);
+					if (!$dbMCTableSort->sqlUpdateRecord($data, $where)) {
+						$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCTableSort->getError()));
+						return false;
+					}
+				}
+			}
+			$SQL = sprintf(	"SELECT * FROM %s WHERE %s='%s'%s AND (%s) ORDER BY FIND_IN_SET(%s, '%s')",
+  										$dbMCQuestion->getTableName(),
+  										dbMultipleChoiceQuestion::field_status,
+  										dbMultipleChoiceQuestion::status_active,
+  										$add,
+  										$like,
+  										dbMultipleChoiceQuestion::field_id,
+  										$sorter_set);
+  		$questions = array();
+  		if (!$dbMCQuestion->sqlExec($SQL, $questions)) {
+  			$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCQuestion->getError()));
+  			return false;
+  		}
+  		
   		
   		$data = array(
   			'checkbox'		=> '',
@@ -1434,7 +1775,7 @@ class mcBackend {
   			'question'		=> mc_header_question,
   			'groups'			=> mc_header_groups
   		);
-  		$quests .= $parser->get($this->template_path.'backend.questionaire.edit.questions.header.htt', $data);
+  		$quests_header = $parser->get($this->template_path.'backend.questionaire.edit.questions.header.htt', $data);
   		$row = new Dwoo_Template_File($this->template_path.'backend.questionaire.edit.questions.row.htt');
   		$flipflop = true;
   		$selected_questions = explode(',', $questionaire[dbMultipleChoiceQuestionaire::field_questions]);
@@ -1444,6 +1785,7 @@ class mcBackend {
   			// Fragen durchlaufen
   			(in_array($question[dbMultipleChoiceQuestion::field_id], $selected_questions)) ? $checked = ' checked="checked"' : $checked = '';
   			$data = array(
+  				'row_id'			=> 'rowID_'.$question[dbMultipleChoiceQuestion::field_id],
   				'flipflop'		=> $flipper,
   				'checkbox'		=> sprintf(	'<input type="checkbox" name="%s[]" value="%s"%s />', 
   																	dbMultipleChoiceQuestionaire::field_questions, 
@@ -1459,8 +1801,19 @@ class mcBackend {
   			$quests .= $parser->get($row, $data);
   		}		
   	} // Gruppen
-  	
 
+  	// Fragen nach Gruppen selektieren
+  	$select = sprintf('<option value="%s">%s</option>', -1, mc_text_select);
+  	$grps = explode(',', $questionaire[dbMultipleChoiceQuestionaire::field_groups]);
+  	sort($grps);
+  	foreach ($grps as $grp) {
+  		$select .= sprintf('<option value="%s">%s</option>', $grp, $grp);
+  	}
+  	$select = sprintf('<select style="width:250px;" name="%s" size="1">%s</select>', self::request_question_select_grps, $select);
+  	$select_grps = sprintf(	'<div class="%s">%s</div>',
+  													self::request_question_select_grps,
+  													sprintf(mc_text_question_grps_select, $select));
+  	
   	// Mitteilungen anzeigen
 		if ($this->isMessage()) {
 			$intro = sprintf('<div class="message">%s</div>', $this->getMessage());
@@ -1483,7 +1836,13 @@ class mcBackend {
 			'qid_name'					=> dbMultipleChoiceQuestionaire::field_id,
 			'qid_value'					=> $qid,
 			'items'							=> $items,
+  		'questions_intro'		=> $quests_intro,
+  		'questions_header'	=> $quests_header,
   		'questions'					=> $quests,
+  		'question_groups'		=> $select_grps,
+  		'sorter_table'			=> $sorter_table,
+  		'sorter_value'			=> $qid,
+  		'sorter_active'			=> 1,
 			'btn_ok'						=> mc_btn_ok,
 			'btn_abort'					=> mc_btn_abort,
 			'abort_location'		=> $this->page_link
@@ -1499,6 +1858,7 @@ class mcBackend {
   public function checkQuestionaire() {
   	global $dbMCQuestionaire;
   	global $tools;
+  	global $dbMCQuestion;
   	
   	(isset($_REQUEST[dbMultipleChoiceQuestionaire::field_id])) ? $qid = $_REQUEST[dbMultipleChoiceQuestionaire::field_id] : $qid = -1;
   	
@@ -1536,6 +1896,35 @@ class mcBackend {
   		default:
   			isset($_REQUEST[$key]) ? $data[$key] = $_REQUEST[$key] : $data[$key] = $value;
   		endswitch;
+  	}
+  	
+  	// pruefen ob eine Gruppe von Fragen uebernommen werden soll
+  	if (isset($_REQUEST[self::request_question_select_grps]) && ($_REQUEST[self::request_question_select_grps])) {
+  		$grp = $_REQUEST[self::request_question_select_grps];
+  		unset($_REQUEST[self::request_question_select_grps]);
+  		unset($_REQUEST[dbMultipleChoiceQuestionaire::field_questions]);
+  		$like = sprintf('%1$s LIKE \'%2$s\' OR %1$s LIKE \'%2$s,%%\' OR %1$s LIKE \'%%,%2$s\' OR %1$s LIKE \'%%,%2$s,%%\'',
+  										dbMultipleChoiceQuestion::field_groups, $grp);
+  		$SQL = sprintf(	"SELECT %s FROM %s WHERE %s='%s' AND (%s)",
+  										dbMultipleChoiceQuestion::field_id,
+  										$dbMCQuestion->getTableName(),
+  										dbMultipleChoiceQuestion::field_status,
+  										dbMultipleChoiceQuestion::status_active,
+  										$like);
+  		$quests = array();
+  		if (!$dbMCQuestion->sqlExec($SQL, $quests)) {
+  			$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCQuestion->getError()));
+  			return false;
+  		}
+  		$act_grps = explode(',', $data[dbMultipleChoiceQuestionaire::field_questions]);
+  		$add = $data[dbMultipleChoiceQuestionaire::field_questions];
+  		foreach ($quests as $item) {
+  			if (!in_array($item[dbMultipleChoiceQuestion::field_id], $act_grps)) {
+  				if (!empty($add)) $add .= ',';
+  				$add .= $item[dbMultipleChoiceQuestion::field_id];
+  			}
+  		}
+  		$data[dbMultipleChoiceQuestionaire::field_questions] = $add;
   	}
   	
   	if ($qid == -1) {
