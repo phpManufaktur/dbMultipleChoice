@@ -1,6 +1,6 @@
 <!-- $Id$ -->
 <h2>{$header}</h2>
-{$intro}
+{$intro|default: ''}
 <form name="{$form_name}" action="{$form_action}" method="post">
   <input type="hidden" name="{$action_name}" value="{$action_value}" />
   <input type="hidden" name="{$tab_action_name}" value="{$tab_action_value}" />
@@ -11,7 +11,7 @@
       <col width="20%" />
       <col width="80%" />
     </colgroup>
-    {$items}
+    {$items|default: ''}
     <tr><td colspan="2">&nbsp;</td></tr>
     <tr>
       <td>&nbsp;</td>
@@ -28,11 +28,10 @@
     <tr><td colspan="2">&nbsp;</td></tr>
     <tr>
       <td colspan="2">
-        <div id="response">RESPONSE</div>
         <div id="sorter">
-          <input id="sorter_table" type="hidden" name="sorter_table" value="{$sorter_table}" />
-          <input id="sorter_value" type="hidden" name="sorter_value" value="{$sorter_value}" />
-          <input id="sorter_active" type="hidden" name="sorter_active" value="{$sorter_active}" />
+          <input id="sorter_table" type="hidden" name="sorter_table" value="{$sorter_table|default: ''}" />
+          <input id="sorter_value" type="hidden" name="sorter_value" value="{$sorter_value|default: ''}" />
+          <input id="sorter_active" type="hidden" name="sorter_active" value="{$sorter_active|default: ''}" />
           <table width="100%">
             <colgroup>
               <col width="5%" />
@@ -41,9 +40,9 @@
               <col width="45%" />
               <col width="20%" />
             </colgroup>
-            {$questions_header}
+            {$questions_header|default: ''}
             <tbody>
-            {$questions}
+            {$questions|default: ''}
             </tbody>
           </table>
         </div>
@@ -52,7 +51,7 @@
     <tr><td colspan="2">&nbsp;</td></tr>
     <tr>
       <td>&nbsp;</td>
-      <td style="vertical-align: top;">{$question_groups}</td>
+      <td style="vertical-align: top;">{$question_groups|default: ''}</td>
     </tr>
     <tr><td colspan="2">&nbsp;</td></tr>
     <tr>

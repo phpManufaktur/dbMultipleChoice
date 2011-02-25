@@ -2,6 +2,11 @@ dbMultipleChoice - Multiple Choice Tests fuer WebsiteBaker
 (c) 2010 by phpManufaktur, Berlin (Germany)
 http://phpManufaktur.de - info@phpManufaktur.de
 
+Release 0.16
+2011-02-25
+- changed: small changes at the template backend.questionaire.edit.htt 
+- changed: some small code cleanups
+
 Release 0.15
 2011-02-23
 - added: (backend) filtering the questionaires by groups
