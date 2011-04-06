@@ -12,7 +12,7 @@
  * FOR VERSION- AND RELEASE NOTES PLEASE READ THE INFO.TXT!
  */
 
-// Mindesparameter gesetzt?
+// Mindestparameter gesetzt?
 if (!isset($_POST['rowID']) || !isset($_POST['sorter_table'])) exit();
 // Sorter ausgeschaltet?
 if (isset($_POST['sorter_active']) && ($_POST['sorter_active'] == 0)) exit();
