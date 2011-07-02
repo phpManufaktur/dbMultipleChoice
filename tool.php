@@ -792,7 +792,8 @@ class mcBackend {
 		for ($i=0; $i < $max_items; $i++) {
 			if (isset($answers[$i])) {
 				// es existiert bereits eine Antwort
-				$text = strip_tags($answers[$i][dbMultipleChoiceQuestionItem::field_question]);
+				//$text = strip_tags($answers[$i][dbMultipleChoiceQuestionItem::field_question]);
+				$text = $answers[$i][dbMultipleChoiceQuestionItem::field_question];
 				$is_correct = $answers[$i][dbMultipleChoiceQuestionItem::field_is_correct];
 				$status = $answers[$i][dbMultipleChoiceQuestionItem::field_status];
 				$hidden = sprintf(	'<input type="hidden" name="%s_%d" value="%d" />',
@@ -1051,10 +1052,10 @@ class mcBackend {
 				elseif ($_REQUEST[dbMultipleChoiceQuestionItem::field_status.'_'.$i] == dbMultipleChoiceQuestionItem::status_active) {
 					// Datensatz hinzufuegen oder aktualisieren
 					$data = array();
-					if ($question[dbMultipleChoiceQuestion::field_use_html] == 1) {
-						$data[dbMultipleChoiceQuestionItem::field_question] = $_REQUEST[dbMultipleChoiceQuestionItem::field_question.'_'.$i];
+					if ($question[dbMultipleChoiceQuestion::field_use_html] == 1) { 
+						$data[dbMultipleChoiceQuestionItem::field_question] = stripslashes($_REQUEST[dbMultipleChoiceQuestionItem::field_question.'_'.$i]);
 					}
-					else {
+					else { 
 						$data[dbMultipleChoiceQuestionItem::field_question] = trim(strip_tags($_REQUEST[dbMultipleChoiceQuestionItem::field_question.'_'.$i]));
 					}
 //					$data[dbMultipleChoiceQuestionItem::field_question] = $_REQUEST[dbMultipleChoiceQuestionItem::field_question.'_'.$i];
@@ -1439,6 +1440,7 @@ class mcBackend {
 		if (count($questionaires) < 1) {
 			// es sind noch keine Fragebögen definiert
 			$this->setMessage(sprintf(mc_msg_questionaire_list_empty, $this->tab_questionaire_array[self::action_questionaire_tab_edit]));
+			$header = '';
 		}
 		else {
 			$data = array(

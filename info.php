@@ -18,7 +18,7 @@ if (!defined('WB_PATH')) die('invalid call of '.$_SERVER['SCRIPT_NAME']);
 $module_directory     = 'multiplechoice';
 $module_name          = 'dbMultipleChoice';
 $module_function      = 'tool';
-$module_version       = '0.16';
+$module_version       = '0.17';
 $module_status        = 'stable';
 $module_languages			= 'DE, EN';
 $module_platform      = '2.8';
