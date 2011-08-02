@@ -5,6 +5,8 @@ http://phpManufaktur.de - info@phpManufaktur.de
 Release 0.18
 2011-08-02
 - fixed: some smaller bugs, code cleanup
+- added: droplet parameter "success_url" redirect to the specified URL if all answers are correct
+- grant compatibillity for LEPTON CMS 
 
 Release 0.17
 2011-07-01
