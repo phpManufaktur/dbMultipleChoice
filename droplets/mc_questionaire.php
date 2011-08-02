@@ -10,9 +10,10 @@
 if (file_exists(WB_PATH.'/modules/multiplechoice/class.frontend.php')) {
 	require_once(WB_PATH.'/modules/multiplechoice/class.frontend.php');
 	isset($id) ? $qid = $id : $qid = -1;
-	isset($show_correct_answer) ? $show_answer = (bool) $show_correct_answer : $show_answer = false; 
-	isset($url) ? $use_url = $url : $use_url = '';
-	$quest = new multipleChoiceFrontend($qid, $show_answer, $use_url);
+	$show_answer = isset($show_correct_answer) ? (bool) $show_correct_answer : false; 
+	$use_url = isset($url) ? $url : '';
+	$success_url = isset($success_url) ? $success_url : ''; 
+	$quest = new multipleChoiceFrontend($qid, $show_answer, $use_url, $success_url);
 	return $quest->action(); 
 }
 else {
