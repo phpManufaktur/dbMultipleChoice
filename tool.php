@@ -2,33 +2,34 @@
 
 /**
  * dbMultipleChoice
- * 
- * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ *
+ * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
  * @link http://phpmanufaktur.de
- * @copyright 2011
- * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
- * @version $Id$
- * 
- * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
+ * @copyright 2010 - 2012
+ * @license http://www.gnu.org/licenses/gpl.html GNU Public License (GPL)
  */
 
-// try to include LEPTON class.secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {	
-	if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php');
-} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php')) {
-	include($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php'); 
-} else {
-	$subs = explode('/', dirname($_SERVER['SCRIPT_NAME']));	$dir = $_SERVER['DOCUMENT_ROOT'];
-	$inc = false;
-	foreach ($subs as $sub) {
-		if (empty($sub)) continue; $dir .= '/'.$sub;
-		if (file_exists($dir.'/framework/class.secure.php')) { 
-			include($dir.'/framework/class.secure.php'); $inc = true;	break; 
-		} 
-	}
-	if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include LEPTON class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+// include class.secure.php to protect this file and the whole CMS!
+if (defined('WB_PATH')) {
+  if (defined('LEPTON_VERSION'))
+    include(WB_PATH.'/framework/class.secure.php');
 }
-// end include LEPTON class.secure.php
+else {
+  $oneback = "../";
+  $root = $oneback;
+  $level = 1;
+  while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
+    $root .= $oneback;
+    $level += 1;
+  }
+  if (file_exists($root.'/framework/class.secure.php')) {
+    include($root.'/framework/class.secure.php');
+  }
+  else {
+    trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+  }
+}
+// end include class.secure.php
 
 require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/initialize.php');
 require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.editor.php');
@@ -884,14 +885,14 @@ class mcBackend {
 			switch ($prompt):
 			case dbMultipleChoiceQuestion::field_prompt_correct:
 				$label = mc_label_prompt_correct;
-				$hint_grp = dbMultipleChoiceQuestionHint::group_correct; 
+				$hint_grp = dbMultipleChoiceQuestionHint::group_correct;
 				$hint_select = self::request_hint_correct_select;
 				$hint_name = self::request_hint_correct_name;
 				$hint_save = self::request_hint_correct_save;
 				$hint_delete = self::request_hint_correct_delete;
 				break;
 			case dbMultipleChoiceQuestion::field_prompt_false:
-				$label = mc_label_prompt_false; 
+				$label = mc_label_prompt_false;
 				$hint_grp = dbMultipleChoiceQuestionHint::group_false;
 				$hint_select = self::request_hint_false_select;
 				$hint_name = self::request_hint_false_name;
@@ -899,7 +900,7 @@ class mcBackend {
 				$hint_delete = self::request_hint_false_delete;
 				break;
 			case dbMultipleChoiceQuestion::field_prompt_partial:
-				$label = mc_label_prompt_partial; 
+				$label = mc_label_prompt_partial;
 				$hint_grp = dbMultipleChoiceQuestionHint::group_partial;
 				$hint_select = self::request_hint_partial_select;
 				$hint_name = self::request_hint_partial_name;
@@ -926,10 +927,10 @@ class mcBackend {
 				$selected = (isset($_REQUEST[$hint_select]) && ($_REQUEST[$hint_select] == $hint[dbMultipleChoiceQuestionHint::field_id])) ? ' selected="selected"' : '';
 				$select .= sprintf('<option value="%s"%s>%s</option>', $hint[dbMultipleChoiceQuestionHint::field_id], $selected, $hint[dbMultipleChoiceQuestionHint::field_name]);
 			}
-			$select = sprintf('<div class="%s">%s: <select name="%s">%s</select> <input type="checkbox" name="%s" /> %s</div>', 
+			$select = sprintf('<div class="%s">%s: <select name="%s">%s</select> <input type="checkbox" name="%s" /> %s</div>',
 												$hint_select,
 												mc_label_hint_select,
-												$hint_select, 
+												$hint_select,
 												$select,
 												$hint_delete,
 												mc_label_hint_delete);
@@ -938,7 +939,7 @@ class mcBackend {
 											$hint_save,
 											mc_label_hint_save_as,
 											$hint_name);
-			
+
 			$data = array(
 				'label'		=> $label,
 				'value'		=> $select.$editor.$name
@@ -1067,10 +1068,10 @@ class mcBackend {
 				elseif ($_REQUEST[dbMultipleChoiceQuestionItem::field_status.'_'.$i] == dbMultipleChoiceQuestionItem::status_active) {
 					// Datensatz hinzufuegen oder aktualisieren
 					$data = array();
-					if ($question[dbMultipleChoiceQuestion::field_use_html] == 1) { 
+					if ($question[dbMultipleChoiceQuestion::field_use_html] == 1) {
 						$data[dbMultipleChoiceQuestionItem::field_question] = stripslashes($_REQUEST[dbMultipleChoiceQuestionItem::field_question.'_'.$i]);
 					}
-					else { 
+					else {
 						$data[dbMultipleChoiceQuestionItem::field_question] = trim(strip_tags($_REQUEST[dbMultipleChoiceQuestionItem::field_question.'_'.$i]));
 					}
 //					$data[dbMultipleChoiceQuestionItem::field_question] = $_REQUEST[dbMultipleChoiceQuestionItem::field_question.'_'.$i];
@@ -1192,7 +1193,7 @@ class mcBackend {
 				$prompt = dbMultipleChoiceQuestion::field_prompt_partial;
 				break;
 			endswitch;
-			if (isset($_REQUEST[$hint_select]) && ($_REQUEST[$hint_select] != -1)) { 
+			if (isset($_REQUEST[$hint_select]) && ($_REQUEST[$hint_select] != -1)) {
 				// Hint verwenden
 				$hint_id = $_REQUEST[$hint_select];
 				if ($hint_delete) {
@@ -1205,7 +1206,7 @@ class mcBackend {
 					}
 					$message .= sprintf(mc_msg_hint_deleted, $hint_id);
 				}
-				else { 
+				else {
 					// Hint soll verwendet werden
 					$where = array(dbMultipleChoiceQuestionHint::field_id => $hint_id);
 					$hint_data = array();
@@ -1222,7 +1223,7 @@ class mcBackend {
 						unset($_REQUEST[$prompt]);
 						unset($_REQUEST[$hint_select]);
 					}
-					else { 
+					else {
 						$message .= sprintf(mc_msg_hint_usage_locked, $hint_data[0][dbMultipleChoiceQuestionHint::field_name]);
 					}
 				}
@@ -1242,7 +1243,7 @@ class mcBackend {
 				}
 				$message .= ($is_checked) ? sprintf(mc_msg_hint_inserted, $hint_name) : sprintf(mc_msg_hint_inserted_locked, $hint_name);
 			}
-		} 
+		}
 		// Datensatz uebernehmen
 		$question[dbMultipleChoiceQuestion::field_answers] = implode(',', $answers);
 		$question[dbMultipleChoiceQuestion::field_solutions] = implode(',', $solutions);
@@ -1281,7 +1282,7 @@ class mcBackend {
 			$_SESSION[dbMultipleChoiceQuestion::field_name] = $question[dbMultipleChoiceQuestion::field_name];
 			$_SESSION[dbMultipleChoiceQuestion::field_question] = $question[dbMultipleChoiceQuestion::field_question];
 		}
-		
+
 		$this->setMessage($message);
 
 		// $_REQUEST zuruecksetzen?
@@ -1336,7 +1337,7 @@ class mcBackend {
   	global $parser;
   	global $dbCfg;
   	global $dbMCTableSort;
-  	
+
   	// Gruppen auslesen
   	$groups = $dbCfg->getValue(dbMultipleChoiceCfg::cfgGroups);
   	asort($groups);
@@ -1357,7 +1358,7 @@ class mcBackend {
   										dbMultipleChoiceQuestionaire::field_groups,
   										$group,
   										dbMultipleChoiceQuestionaire::field_groups,
-  										$group  										
+  										$group
   									);
 	  	$questionaires = array();
 	  	if (!$dbMCQuestionaire->sqlExec($sql, $questionaires)) {
@@ -1398,7 +1399,7 @@ class mcBackend {
 				if (!$dbMCTableSort->sqlInsertRecord($data)) {
 					$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCTableSort->getError()));
 					return false;
-				} 
+				}
 			}
 			else {
 				// Eintrag auf Unterschiede pruefen und Datensatz wieder aktualisieren
@@ -1428,20 +1429,20 @@ class mcBackend {
 			if (!$dbMCQuestionaire->sqlExec($sql, $questionaires)) {
 				$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCQuestionaire->getError()));
 				return false;
-			}	  	
+			}
   	}
-  	
+
   	// Filter
   	$filter = sprintf('<option value="%s">%s</option>', -1, mc_text_select_filter);
   	foreach ($groups as $key => $value) {
   		$selected = (isset($_REQUEST[self::request_questionaire_filter]) && ($_REQUEST[self::request_questionaire_filter] == $key)) ? ' selected="selected"' : '';
   		$filter .= sprintf('<option value="%s"%s>%s</option>', $key, $selected, $value);
   	}
-  	
-  	$filter = sprintf('<div class="%s">%s: <select name="%s" onchange="javascript: window.location = \'%s\'+this.value; return false;">%s</select></div>', 
+
+  	$filter = sprintf('<div class="%s">%s: <select name="%s" onchange="javascript: window.location = \'%s\'+this.value; return false;">%s</select></div>',
   										self::request_questionaire_filter,
   										mc_label_filter,
-  										self::request_questionaire_filter, 
+  										self::request_questionaire_filter,
   										sprintf('%s&%s=%s&%s=%s&%s=',
   														$this->page_link,
   														self::request_action,
@@ -1450,7 +1451,7 @@ class mcBackend {
   														self::action_question_tab_list,
   														self::request_questionaire_filter),
   										$filter);
-  	
+
   	$items = '';
 		if (count($questionaires) < 1) {
 			// es sind noch keine Fragebögen definiert
@@ -1583,7 +1584,7 @@ class mcBackend {
 
 		$quests_header = '';
 		$sorter_table = '';
-		
+
   	$items = '';
   	$row = new Dwoo_Template_File($this->template_path.'backend.question.edit.row.htt');
 
@@ -1685,7 +1686,7 @@ class mcBackend {
 
 		// Intro fuer die Fragenauswahl
 		$quests_intro = sprintf('<div class="intro">%s</div>', mc_intro_questionaire_questions);
-		
+
   	$quests = '';
   	if (empty($questionaire[dbMultipleChoiceQuestionaire::field_groups])) {
   		// keine Gruppen festgelegt
@@ -1706,7 +1707,7 @@ class mcBackend {
   		foreach ($sGroups as $grp) {
   			if (!empty($like)) $like .= ' OR ';
   			$like .= sprintf(	'%1$s LIKE \'%2$s\' OR %1$s LIKE \'%2$s,%%\' OR %1$s LIKE \'%%,%2$s\' OR %1$s LIKE \'%%,%2$s,%%\'',
-  												dbMultipleChoiceQuestion::field_groups, $grp); 
+  												dbMultipleChoiceQuestion::field_groups, $grp);
   		}
   		// zusaetzliches Handling fuer die Drag & Drop Sortierung
   		$sorter_table = 'mod_mc_question';
@@ -1747,7 +1748,7 @@ class mcBackend {
 				if (!$dbMCTableSort->sqlInsertRecord($data)) {
 					$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCTableSort->getError()));
 					return false;
-				} 
+				}
 			}
 			else {
 				// Eintrag auf Unterschiede pruefen und Datensatz aktualisieren
@@ -1780,8 +1781,8 @@ class mcBackend {
   			$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCQuestion->getError()));
   			return false;
   		}
-  		
-  		
+
+
   		$data = array(
   			'checkbox'		=> '',
   			'id'					=> mc_header_id,
@@ -1801,19 +1802,19 @@ class mcBackend {
   			$data = array(
   				'row_id'			=> 'rowID_'.$question[dbMultipleChoiceQuestion::field_id],
   				'flipflop'		=> $flipper,
-  				'checkbox'		=> sprintf(	'<input type="checkbox" name="%s[]" value="%s"%s />', 
-  																	dbMultipleChoiceQuestionaire::field_questions, 
-  																	$question[dbMultipleChoiceQuestion::field_id], 
+  				'checkbox'		=> sprintf(	'<input type="checkbox" name="%s[]" value="%s"%s />',
+  																	dbMultipleChoiceQuestionaire::field_questions,
+  																	$question[dbMultipleChoiceQuestion::field_id],
   																	$checked),
   				'id'					=> sprintf(	'%05d', $question[dbMultipleChoiceQuestion::field_id]),
   				'name'				=> $question[dbMultipleChoiceQuestion::field_name],
-  				'question'		=> sprintf(	'<span title="%s">%s</span>', 
+  				'question'		=> sprintf(	'<span title="%s">%s</span>',
   																	strip_tags($question[dbMultipleChoiceQuestion::field_description]),
   																	$question[dbMultipleChoiceQuestion::field_question]),
   				'groups'			=> str_replace(',', ', ', $question[dbMultipleChoiceQuestion::field_groups])
   			);
   			$quests .= $parser->get($row, $data);
-  		}		
+  		}
   	} // Gruppen
 
   	// Fragen nach Gruppen selektieren
@@ -1827,7 +1828,7 @@ class mcBackend {
   	$select_grps = sprintf(	'<div class="%s">%s</div>',
   													self::request_question_select_grps,
   													sprintf(mc_text_question_grps_select, $select));
-  	
+
   	// Mitteilungen anzeigen
 		if ($this->isMessage()) {
 			$intro = sprintf('<div class="message">%s</div>', $this->getMessage());
@@ -1866,16 +1867,16 @@ class mcBackend {
 
   /**
    * Prüft den Datensatz und speichert den Fragebogen
-   * 
+   *
    * @return STR dlgQuestionaireEdit()
    */
   public function checkQuestionaire() {
   	global $dbMCQuestionaire;
   	global $tools;
   	global $dbMCQuestion;
-  	
+
   	(isset($_REQUEST[dbMultipleChoiceQuestionaire::field_id])) ? $qid = $_REQUEST[dbMultipleChoiceQuestionaire::field_id] : $qid = -1;
-  	
+
   	$message = '';
   	// Mindestbedingungen prüfen
   	if (!isset($_REQUEST[dbMultipleChoiceQuestionaire::field_name]) || empty($_REQUEST[dbMultipleChoiceQuestionaire::field_name])) {
@@ -1892,7 +1893,7 @@ class mcBackend {
   		$this->setMessage($message);
   		return $this->dlgQuestionaireEdit();
   	}
-  	
+
   	// Daten zusammenstellen
   	$data = array();
   	foreach ($dbMCQuestionaire->getFields() as $key => $value) {
@@ -1902,7 +1903,7 @@ class mcBackend {
   			isset($_REQUEST[$key]) ? $data[$key] = implode(',', $_REQUEST[$key]) : $data[$key] = $value;
   			break;
   		case dbMultipleChoiceQuestionaire::field_update_by:
-  			$data[$key] = $tools->getDisplayName(); 
+  			$data[$key] = $tools->getDisplayName();
   			break;
   		case dbMultipleChoiceQuestionaire::field_update_when:
   			$data[$key] = date('Y-m-d H:i:s');
@@ -1911,7 +1912,7 @@ class mcBackend {
   			isset($_REQUEST[$key]) ? $data[$key] = $_REQUEST[$key] : $data[$key] = $value;
   		endswitch;
   	}
-  	
+
   	// pruefen ob eine Gruppe von Fragen uebernommen werden soll
   	if (isset($_REQUEST[self::request_question_select_grps]) && ($_REQUEST[self::request_question_select_grps])) {
   		$grp = $_REQUEST[self::request_question_select_grps];
@@ -1940,7 +1941,7 @@ class mcBackend {
   		}
   		$data[dbMultipleChoiceQuestionaire::field_questions] = $add;
   	}
-  	
+
   	if ($qid == -1) {
   		// neuer Datensatz
   		if (!$dbMCQuestionaire->sqlInsertRecord($data, $qid)) {
@@ -1961,7 +1962,7 @@ class mcBackend {
   		}
   		$message .= sprintf(mc_msg_questionaire_updated, $qid);
   	}
-  	
+
   	$this->setMessage($message);
   	return $this->dlgQuestionaireEdit();
   } // checkQuestionaire()
@@ -1975,7 +1976,7 @@ class mcBackend {
   	);
   	return $parser->get($this->template_path.'backend.about.htt', $data);
   }
-  
+
 } // class mcBackend
 
 ?>

@@ -1,3 +1,13 @@
+{*
+ * dbMultipleChoice
+ *
+ * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
+ * @link http://phpmanufaktur.de
+ * @copyright 2010 - 2012
+ * @license http://www.gnu.org/licenses/gpl.html GNU Public License (GPL)
+ *
+ * Use {dump()} to get a list of all availables variables
+ *}
 <tr class="{$flipflop}">
   <td>{$id}</td>
   <td>{$name}</td>

@@ -1,0 +1,58 @@
+### dbMultipleChoice
+(c) 2010-2012 - Ralf Hertsch, Berlin (Germany)
+
+0.19 - 2012-06-06
+
+* moved repository from SVN to GitHub
+* added LICENSE
+* added CHANGELOG
+* added README.md
+* deleted info.txt and backend.js
+* updated all header and archive informations
+
+0.18 - 2011-08-02
+
+* fixed: some smaller bugs, code cleanup
+* added: droplet parameter "success_url" redirect to the specified URL if all answers are correct
+* grant compatibillity for LEPTON CMS 
+
+0.17 - 2011-07-01
+
+* fixed: creating answers in HTML does not work (text was stripped)
+
+0.16 - 2011-02-25
+
+* changed: small changes at the template backend.questionaire.edit.htt 
+* changed: some small code cleanups
+
+0.15 - 2011-02-23
+
+* added: (backend) filtering the questionaires by groups
+* added: (backend) sorting the questionaire list individual with drag & drop
+* added: (backend) preselect groups of answers for questionaire
+* added: (backend) sorting the questions for a questionaire in backend with drag & drop - order will be used also in frontend
+* added: (backend) remember the main fields on editing questions and use as default at the next (new) question
+* added: (backend) save hints and use them again by selecting
+
+0.14 - 2010-10-16
+
+* Changed MySQL interface to dbConnect_LE
+* use Dwoo template engine as external addon
+
+0.13 - 2010-09-20
+
+* fixed: problem with wrong masking of strings
+
+0.12 (stable) - 2010-09-01
+
+* added: support for english language
+* fixed: some small problems
+
+0.11 - 2010-07-17
+
+* fixed: some smaller problems, cleanup
+* added: optional showing the correct answer as hint
+
+0.10 - 2010-06-10
+
+* initial release

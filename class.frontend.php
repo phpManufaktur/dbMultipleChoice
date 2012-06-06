@@ -2,33 +2,34 @@
 
 /**
  * dbMultipleChoice
- * 
- * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ *
+ * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
  * @link http://phpmanufaktur.de
- * @copyright 2011
- * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
- * @version $Id$
- * 
- * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
+ * @copyright 2010 - 2012
+ * @license http://www.gnu.org/licenses/gpl.html GNU Public License (GPL)
  */
 
-// try to include LEPTON class.secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {	
-	if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php');
-} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php')) {
-	include($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php'); 
-} else {
-	$subs = explode('/', dirname($_SERVER['SCRIPT_NAME']));	$dir = $_SERVER['DOCUMENT_ROOT'];
-	$inc = false;
-	foreach ($subs as $sub) {
-		if (empty($sub)) continue; $dir .= '/'.$sub;
-		if (file_exists($dir.'/framework/class.secure.php')) { 
-			include($dir.'/framework/class.secure.php'); $inc = true;	break; 
-		} 
-	}
-	if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include LEPTON class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+// include class.secure.php to protect this file and the whole CMS!
+if (defined('WB_PATH')) {
+  if (defined('LEPTON_VERSION'))
+    include(WB_PATH.'/framework/class.secure.php');
 }
-// end include LEPTON class.secure.php
+else {
+  $oneback = "../";
+  $root = $oneback;
+  $level = 1;
+  while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
+    $root .= $oneback;
+    $level += 1;
+  }
+  if (file_exists($root.'/framework/class.secure.php')) {
+    include($root.'/framework/class.secure.php');
+  }
+  else {
+    trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+  }
+}
+// end include class.secure.php
 
 if (!defined('DEBUG_MODE')) define('DEBUG_MODE', true);
 
@@ -60,9 +61,9 @@ if (!is_object($dbMCQuestionItem)) $dbMCQuestionItem = new dbMultipleChoiceQuest
 if (!is_object($dbMCTableSort)) $dbMCTableSort = new dbMultipleChoiceTableSort();
 
 class multipleChoiceFrontend {
-	
+
 	const request_action		= 'act';
-	
+
 	const action_default		= 'def';
 	const action_submit			= 'sub';
 	const action_check			= 'chk';
@@ -74,7 +75,7 @@ class multipleChoiceFrontend {
 	private $template_path;
 	private $show_answer = false;
 	private $success_url = '';
-	
+
 	/**
 	 * Konstruktor
 	 */
@@ -183,7 +184,7 @@ class multipleChoiceFrontend {
   		break;
   	endswitch;
   } // action
-  
+
   public function show($content) {
   	global $parser;
   	if ($this->isError()) {
@@ -199,14 +200,14 @@ class multipleChoiceFrontend {
   	);
   	return $parser->get($this->template_path.'frontend.body.htt', $data);
   }
-  
+
   public function showQuestionaire() {
   	global $dbMCQuestionaire;
   	global $dbMCQuestionItem;
   	global $dbMCQuestion;
   	global $parser;
   	global $dbMCTableSort;
-  	
+
   	if ($this->qid < 1) {
   		// keine ID angegeben
   		$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, mc_error_id_invalid));
@@ -225,22 +226,22 @@ class multipleChoiceFrontend {
   		return false;
   	}
   	$questionaire = $questionaire[0];
-  	
+
   	(isset($_REQUEST[self::request_action]) && $_REQUEST[self::request_action] == self::action_check) ? $check_result = true : $check_result = false;
-  	
+
   	$items = '';
   	$questions_array = explode(',', $questionaire[dbMultipleChoiceQuestionaire::field_questions]);
   	$in = '';
   	foreach ($questions_array as $question) {
   		if (!empty($in)) $in .= ',';
-  		$in .= sprintf("'%s'", $question); 
+  		$in .= sprintf("'%s'", $question);
   	}
   	if ($questionaire[dbMultipleChoiceQuestionaire::field_shuffle_questions] == 1) {
   		// Fragen durcheinanderwürfeln
   		$order = ' ORDER BY RAND()';
   	}
-  	else { 
-  		$order = '';	
+  	else {
+  		$order = '';
   		$where = array(
   			dbMultipleChoiceTableSort::field_table	=> 'mod_mc_question',
   			dbMultipleChoiceTableSort::field_value	=> $this->qid
@@ -270,18 +271,18 @@ class multipleChoiceFrontend {
   		$this->setError(sprintf(mc_error_questions, $this->qid));
   		return false;
   	}
-  	
+
   	$row = new Dwoo_Template_File($this->template_path.'frontend.questionaire.row.htt');
   	$row_span = new Dwoo_Template_File($this->template_path.'frontend.questionaire.row.span.htt');
-  	
+
   	$solutions_total = 0;
   	$solutions_correct = 0;
   	$solutions_false = 0;
-  	
+
   	foreach ($questions as $question) {
   		$answers_array = explode(',', $question[dbMultipleChoiceQuestion::field_answers]);
   		$solutions_array = explode(',', $question[dbMultipleChoiceQuestion::field_solutions]);
-  		
+
   		switch ($questionaire[dbMultipleChoiceQuestionaire::field_mode]):
   		case dbMultipleChoiceQuestionaire::mode_mixed:
   		case dbMultipleChoiceQuestionaire::mode_partial:
@@ -295,7 +296,7 @@ class multipleChoiceFrontend {
   			$mixed_mode = false;
   			break;
   		endswitch;
-  		
+
   		$in = '';
   		foreach ($answers_array as $answer) {
   			if (!empty($in)) $in .= ',';
@@ -305,8 +306,8 @@ class multipleChoiceFrontend {
   			// Fragen durcheinanderwürfeln
   			$order = ' ORDER BY RAND()';
   		}
-  		else { 
-  			$order = '';	
+  		else {
+  			$order = '';
   		}
   		$SQL = sprintf(	"SELECT * FROM %s WHERE %s IN (%s) AND %s='%s'%s",
   										$dbMCQuestionItem->getTableName(),
@@ -326,7 +327,7 @@ class multipleChoiceFrontend {
   		}
   		$ans = '';
   		$correct = 0;
-  		$false = 0; 
+  		$false = 0;
   		foreach ($answers as $answer) {
   			if (isset($_REQUEST[dbMultipleChoiceQuestion::field_answers.'_'.$question[dbMultipleChoiceQuestion::field_id]])) {
   				$ans_array = $_REQUEST[dbMultipleChoiceQuestion::field_answers.'_'.$question[dbMultipleChoiceQuestion::field_id]];
@@ -335,19 +336,19 @@ class multipleChoiceFrontend {
   				$ans_array = array();
   			}
   			if ($check_result) {
-  				if (($answer[dbMultipleChoiceQuestionItem::field_is_correct] == 1) && 
+  				if (($answer[dbMultipleChoiceQuestionItem::field_is_correct] == 1) &&
   				    (in_array($answer[dbMultipleChoiceQuestionItem::field_id], $ans_array))) {
   					// richtige Antwort
-  					$class = "mc_answer_correct";	
-  					$correct++;	
+  					$class = "mc_answer_correct";
+  					$correct++;
   			  }
-  				elseif (($answer[dbMultipleChoiceQuestionItem::field_is_correct] == 0) && 
+  				elseif (($answer[dbMultipleChoiceQuestionItem::field_is_correct] == 0) &&
   			      		(in_array($answer[dbMultipleChoiceQuestionItem::field_id], $ans_array))) {
   			    // falsche Antwort
   			    $class = "mc_answer_false";
   			    $false++;
   			  }
-  			  elseif (($this->show_answer) && 
+  			  elseif (($this->show_answer) &&
   			  				($answer[dbMultipleChoiceQuestionItem::field_is_correct] == 1) &&
   			  				(!empty($ans_array))) {
   			  	$class = "mc_answer_hint_correct";
@@ -359,7 +360,7 @@ class multipleChoiceFrontend {
   			else {
   				$class = 'mc_answer';
   			}
-  			
+
   			(in_array($answer[dbMultipleChoiceQuestionItem::field_id], $ans_array)) ? $checked = ' checked="checked"' : $checked = '';
   			$data = array(
   				'class'				=> $class,
@@ -372,8 +373,8 @@ class multipleChoiceFrontend {
   			);
   			$ans .= $parser->get($row, $data);
   		} // foreach
-  		
-  		
+
+
   		$data = array(
   			'class'	=> 'mc_question',
   			'item' 	=> $question[dbMultipleChoiceQuestion::field_question]
@@ -385,14 +386,14 @@ class multipleChoiceFrontend {
   		);
   		$items .= $parser->get($row_span, $data);
   		$items .= $ans;
-  		
+
   		if ($check_result) {
   			// Auswertung
   			$max_solutions = count(explode(',', $question[dbMultipleChoiceQuestion::field_solutions]));
   			if ($mixed_mode) {
   				// prozentuale Auswertung
-  				$x = $correct-$false; 
-  				if ($x < 0) $x = 0; 
+  				$x = $correct-$false;
+  				if ($x < 0) $x = 0;
   				$solutions_correct += $x;
   				if (($max_solutions == $correct) && ($false == 0)) {
   					// Frage richtig beantwortet
@@ -414,7 +415,7 @@ class multipleChoiceFrontend {
   				}
   			}
   			elseif (($false == 0) && ($max_solutions == $correct)) {
-  				// strikte Auswertung, Frage richtig beantwortet	
+  				// strikte Auswertung, Frage richtig beantwortet
   				$solutions_correct++;
   				if (!empty($question[dbMultipleChoiceQuestion::field_prompt_correct])) {
   					$items .= $parser->get($row_span, array('item' => sprintf('<div class="mc_answer_explain">%s</div>', $question[dbMultipleChoiceQuestion::field_prompt_correct])));
@@ -427,9 +428,9 @@ class multipleChoiceFrontend {
   				}
   			}
   		}
-  		
+
   	}
-  	
+
   	$percent = 0;
   	if ($check_result) {
   		// Auswertung anzeigen
@@ -446,13 +447,13 @@ class multipleChoiceFrontend {
   		);
   		$items .= $parser->get($row_span, $data);
   	}
-  	
+
   	if (($percent == 100) && (!empty($this->success_url))) {
   		// bei 100% richtigen Antworten auf eine andere Seite umleiten
   		header("Location: ".$this->success_url);
-  		exit();	
+  		exit();
   	}
-  	
+
   	// Mitteilungen anzeigen
 		if ($this->isMessage()) {
 			$intro = sprintf('<div class="message">%s</div>', $this->getMessage());
@@ -463,7 +464,7 @@ class multipleChoiceFrontend {
 		else {
 			$intro = '';
 		}
-  	
+
   	$data = array(
   		'form_name'				=> 'mc_questionaire',
   		'form_action'			=> $this->page_link,
@@ -479,7 +480,7 @@ class multipleChoiceFrontend {
   	);
   	return $parser->get($this->template_path.'frontend.questionaire.htt', $data);
   }
-	
+
 } // class multipleChoiceFrontend
 
 ?>

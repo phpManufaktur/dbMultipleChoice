@@ -2,36 +2,37 @@
 
 /**
  * dbMultipleChoice
- * 
- * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ *
+ * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
  * @link http://phpmanufaktur.de
- * @copyright 2011
- * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
- * @version $Id$
- * 
- * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
+ * @copyright 2010 - 2012
+ * @license http://www.gnu.org/licenses/gpl.html GNU Public License (GPL)
  */
 
-// try to include LEPTON class.secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {	
-	if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php');
-} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php')) {
-	include($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php'); 
-} else {
-	$subs = explode('/', dirname($_SERVER['SCRIPT_NAME']));	$dir = $_SERVER['DOCUMENT_ROOT'];
-	$inc = false;
-	foreach ($subs as $sub) {
-		if (empty($sub)) continue; $dir .= '/'.$sub;
-		if (file_exists($dir.'/framework/class.secure.php')) { 
-			include($dir.'/framework/class.secure.php'); $inc = true;	break; 
-		} 
-	}
-	if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include LEPTON class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+// include class.secure.php to protect this file and the whole CMS!
+if (defined('WB_PATH')) {
+  if (defined('LEPTON_VERSION'))
+    include(WB_PATH.'/framework/class.secure.php');
 }
-// end include LEPTON class.secure.php
+else {
+  $oneback = "../";
+  $root = $oneback;
+  $level = 1;
+  while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
+    $root .= $oneback;
+    $level += 1;
+  }
+  if (file_exists($root.'/framework/class.secure.php')) {
+    include($root.'/framework/class.secure.php');
+  }
+  else {
+    trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+  }
+}
+// end include class.secure.php
 
 class dbMultipleChoiceCfg extends dbConnectLE {
-	
+
 	const field_id						= 'cfg_id';
 	const field_name					= 'cfg_name';
 	const field_type					= 'cfg_type';
@@ -41,10 +42,10 @@ class dbMultipleChoiceCfg extends dbConnectLE {
 	const field_status				= 'cfg_status';
 	const field_update_by			= 'cfg_update_by';
 	const field_update_when		= 'cfg_update_when';
-	
+
 	const status_active				= 1;
 	const status_deleted			= 0;
-	
+
 	const type_undefined			= 0;
 	const type_array					= 7;
   const type_boolean				= 1;
@@ -54,7 +55,7 @@ class dbMultipleChoiceCfg extends dbConnectLE {
   const type_path						= 5;
   const type_string					= 6;
   const type_url						= 8;
-  
+
   public $type_array = array(
   	self::type_undefined		=> '-UNDEFINED-',
   	self::type_array				=> 'ARRAY',
@@ -66,17 +67,17 @@ class dbMultipleChoiceCfg extends dbConnectLE {
   	self::type_string				=> 'STRING',
   	self::type_url					=> 'URL'
   );
-  
+
   private $createTables 		= false;
   private $message					= '';
-    
+
   const cfgDeveloperMode		= 'cfgDeveloperMode';
   const cfgMaxItems					= 'cfgMaxItems';
   const cfgMinItems					= 'cfgMinItems';
   const cfgGroups						= 'cfgGroups';
   const cfgPreselectHTML		= 'cfgPreselectHTML';
   const cfgRememberQuestion	= 'cfgRememberQuestion';
-  
+
   public $config_array = array(
   	//array('kit_label_cfg_developer_mode', self::cfgDeveloperMode, self::type_boolean, 0, 'kit_desc_cfg_developer_mode'),
   	array('mc_label_cfg_max_items', self::cfgMaxItems, self::type_integer, 5, 'mc_desc_cfg_max_items'),
@@ -84,8 +85,8 @@ class dbMultipleChoiceCfg extends dbConnectLE {
   	array('mc_label_cfg_groups', self::cfgGroups, self::type_array, 'Default', 'mc_desc_cfg_groups'),
   	array('mc_label_cfg_preselect_html', self::cfgPreselectHTML, self::type_boolean, 0, 'mc_desc_cfg_preselect_html'),
   	array('mc_label_cfg_remember_question', self::cfgRememberQuestion, self::type_boolean, 0, 'mc_desc_cfg_remember_question')
-  );  
-  
+  );
+
   public function __construct($createTables = false) {
   	$this->createTables = $createTables;
   	parent::__construct();
@@ -116,14 +117,14 @@ class dbMultipleChoiceCfg extends dbConnectLE {
   	// important: switch decoding OFF.
 		$this->setDecodeSpecialChars(false);
   } // __construct()
-  
+
   public function setMessage($message) {
     $this->message = $message;
   } // setMessage()
 
   /**
     * Get Message from $this->message;
-    * 
+    *
     * @return STR $this->message
     */
   public function getMessage() {
@@ -132,21 +133,21 @@ class dbMultipleChoiceCfg extends dbConnectLE {
 
   /**
     * Check if $this->message is empty
-    * 
+    *
     * @return BOOL
     */
   public function isMessage() {
     return (bool) !empty($this->message);
   } // isMessage
-  
+
   /**
    * Aktualisiert den Wert $new_value des Datensatz $name
-   * 
+   *
    * @param $new_value STR - Wert, der uebernommen werden soll
    * @param $id INT - ID des Datensatz, dessen Wert aktualisiert werden soll
-   * 
+   *
    * @return BOOL Ergebnis
-   * 
+   *
    */
   public function setValueByName($new_value, $name) {
   	$where = array();
@@ -162,7 +163,7 @@ class dbMultipleChoiceCfg extends dbConnectLE {
   	}
   	return $this->setValue($new_value, $config[0][self::field_id]);
   } // setValueByName()
-  
+
   /**
    * Haengt einen Slash an das Ende des uebergebenen Strings
    * wenn das letzte Zeichen noch kein Slash ist
@@ -172,9 +173,9 @@ class dbMultipleChoiceCfg extends dbConnectLE {
    */
   public function addSlash($path) {
   	$path = substr($path, strlen($path)-1, 1) == "/" ? $path : $path."/";
-  	return $path;  
+  	return $path;
   }
-  
+
   /**
    * Wandelt einen String in einen Float Wert um.
    * Geht davon aus, dass Dezimalzahlen mit ',' und nicht mit '.'
@@ -196,7 +197,7 @@ class dbMultipleChoiceCfg extends dbConnectLE {
 		$int = intval($string);
 		return $int;
   }
-  
+
 	/**
 	 * Ueberprueft die uebergebene E-Mail Adresse auf logische Gueltigkeit
 	 *
@@ -209,13 +210,13 @@ class dbMultipleChoiceCfg extends dbConnectLE {
 		else {
 			return false; }
 	}
-  
+
   /**
    * Aktualisiert den Wert $new_value des Datensatz $id
-   * 
+   *
    * @param $new_value STR - Wert, der uebernommen werden soll
    * @param $id INT - ID des Datensatz, dessen Wert aktualisiert werden soll
-   * 
+   *
    * @return BOOL Ergebnis
    */
   public function setValue($new_value, $id) {
@@ -241,7 +242,7 @@ class dbMultipleChoiceCfg extends dbConnectLE {
   		foreach ($worker as $item) {
   			$data[] = trim($item);
   		};
-  		$value = implode(",", $data);  			
+  		$value = implode(",", $data);
   		break;
   	case self::type_boolean:
   		$value = (bool) $new_value;
@@ -253,7 +254,7 @@ class dbMultipleChoiceCfg extends dbConnectLE {
   		}
   		else {
   			$this->setMessage(sprintf(mc_msg_invalid_email, $new_value));
-  			return false;			
+  			return false;
   		}
   		break;
   	case self::type_float:
@@ -287,12 +288,12 @@ class dbMultipleChoiceCfg extends dbConnectLE {
   	}
   	return true;
   } // setValue()
-  
+
   /**
    * Gibt den angeforderten Wert zurueck
-   * 
-   * @param $name - Bezeichner 
-   * 
+   *
+   * @param $name - Bezeichner
+   *
    * @return WERT entsprechend des TYP
    */
   public function getValue($name) {
@@ -334,7 +335,7 @@ class dbMultipleChoiceCfg extends dbConnectLE {
   	endswitch;
   	return $result;
   } // getValue()
-  
+
   public function checkConfig() {
   	foreach ($this->config_array as $item) {
   		$where = array();
@@ -362,7 +363,7 @@ class dbMultipleChoiceCfg extends dbConnectLE {
   	}
   	return true;
   }
-	  
+
 } // class dbKITcfg
 
 

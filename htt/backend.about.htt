@@ -1,4 +1,13 @@
-<!-- $Id$ -->
+{*
+ * dbMultipleChoice
+ *
+ * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
+ * @link http://phpmanufaktur.de
+ * @copyright 2010 - 2012
+ * @license http://www.gnu.org/licenses/gpl.html GNU Public License (GPL)
+ *
+ * Use {dump()} to get a list of all availables variables
+ *}
 <table width="99%">
   <colgroup>
     <col width="470" />   
@@ -10,7 +19,7 @@
     </td>
     <td style="vertical-align: bottom;">
       <p><b>dbMultipleChoice</b>, Release {$release}<br />
-      (c) 2010 by <b><i>php</i>Manufaktur</b></p>
+      (c) 2010-2012 by <b><i>php</i>Manufaktur</b></p>
       <p>Ralf Hertsch<br />
       Stockholmer Str. 31<br />
       13359 Berlin (Germany)</p>
