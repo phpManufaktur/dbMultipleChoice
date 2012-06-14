@@ -1,6 +1,10 @@
 ### dbMultipleChoice
 (c) 2010-2012 - Ralf Hertsch, Berlin (Germany)
 
+0.20 - 2012-06-14
+
+* removed WebsiteBaker version check
+
 0.19 - 2012-06-06
 
 * moved repository from SVN to GitHub

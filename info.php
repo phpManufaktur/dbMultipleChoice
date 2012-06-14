@@ -34,7 +34,7 @@ else {
 $module_directory     = 'multiplechoice';
 $module_name          = 'dbMultipleChoice';
 $module_function      = 'tool';
-$module_version       = '0.19';
+$module_version       = '0.20';
 $module_status        = 'stable';
 $module_platform      = '2.8';
 $module_author        = 'phpManufaktur, Berlin (Germany)';
