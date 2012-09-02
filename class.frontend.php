@@ -177,6 +177,14 @@ class multipleChoiceFrontend {
   			$_REQUEST[$key] = $this->xssPrevent($value);
   		}
   	}
+  	if (file_exists(WB_PATH.'/modules/droplets_extension/interface.php'))  {
+  	  // if DroplesExtension exists load interface
+  	  require_once (WB_PATH . '/modules/droplets_extension/interface.php');
+    	// register CSS file
+    	if (!is_registered_droplet_css('dbMultipleChoice', PAGE_ID)) {
+    	  register_droplet_css('dbMultipleChoice', PAGE_ID, 'multiplechoice', 'mc_frontend.css');
+    	}
+  	}
     isset($_REQUEST[self::request_action]) ? $action = $_REQUEST[self::request_action] : $action = self::action_default;
   	switch ($action):
   	default:
