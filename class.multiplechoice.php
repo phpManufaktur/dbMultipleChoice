@@ -74,10 +74,20 @@ class dbMultipleChoiceQuestionaire extends dbConnectLE {
 
 	private $create_tables 			= false;
 
+	protected static $config_file = 'config.json';
+	protected static $table_prefix = TABLE_PREFIX;
+
 	public function __construct($create_tables=false) {
 		$this->create_tables = $create_tables;
-		parent::__construct();
-		$this->setTableName('mod_mc_questionaire');
+		// use another table prefix?
+    if (file_exists(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json')) {
+      $config = json_decode(file_get_contents(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json'), true);
+      if (isset($config['table_prefix']))
+        self::$table_prefix = $config['table_prefix'];
+    }
+    parent::__construct();
+    $this->setTablePrefix(self::$table_prefix);
+    $this->setTableName('mod_mc_questionaire');
 		$this->addFieldDefinition(self::field_id, "INT(11) NOT NULL AUTO_INCREMENT", true);
 		$this->addFieldDefinition(self::field_name, "VARCHAR(80) NOT NULL DEFAULT ''");
 		$this->addFieldDefinition(self::field_title, "VARCHAR(80) NOT NULL DEFAULT ''");
@@ -149,10 +159,20 @@ class dbMultipleChoiceQuestion extends dbConnectLE {
 
 	private $create_tables 			= false;
 
+	protected static $config_file = 'config.json';
+	protected static $table_prefix = TABLE_PREFIX;
+
 	public function __construct($create_tables=false) {
 		$this->create_tables = $create_tables;
-		parent::__construct();
-		$this->setTableName('mod_mc_question');
+		// use another table prefix?
+    if (file_exists(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json')) {
+      $config = json_decode(file_get_contents(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json'), true);
+      if (isset($config['table_prefix']))
+        self::$table_prefix = $config['table_prefix'];
+    }
+    parent::__construct();
+    $this->setTablePrefix(self::$table_prefix);
+    $this->setTableName('mod_mc_question');
 		$this->addFieldDefinition(self::field_id, "INT(11) NOT NULL AUTO_INCREMENT", true);
 		$this->addFieldDefinition(self::field_name, "VARCHAR(80) NOT NULL DEFAULT ''");
 		$this->addFieldDefinition(self::field_question, "VARCHAR(80) NOT NULL DEFAULT ''");
@@ -205,10 +225,20 @@ class dbMultipleChoiceQuestionItem extends dbConnectLE {
 
 	private $create_tables 			= false;
 
+	protected static $config_file = 'config.json';
+	protected static $table_prefix = TABLE_PREFIX;
+
 	public function __construct($create_tables=false) {
 		$this->create_tables = $create_tables;
-		parent::__construct();
-		$this->setTableName('mod_mc_question_item');
+		// use another table prefix?
+    if (file_exists(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json')) {
+      $config = json_decode(file_get_contents(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json'), true);
+      if (isset($config['table_prefix']))
+        self::$table_prefix = $config['table_prefix'];
+    }
+    parent::__construct();
+    $this->setTablePrefix(self::$table_prefix);
+    $this->setTableName('mod_mc_question_item');
 		$this->addFieldDefinition(self::field_id, "INT(11) NOT NULL AUTO_INCREMENT", true);
 		$this->addFieldDefinition(self::field_question_id, "INT(11) NOT NULL DEFAULT '-1'");
 		$this->addFieldDefinition(self::field_question, "TEXT NOT NULL DEFAULT ''", false, false, true);
@@ -255,10 +285,20 @@ class dbMultipleChoiceQuestionHint extends dbConnectLE {
 
 	private $create_tables 			= false;
 
+	protected static $config_file = 'config.json';
+	protected static $table_prefix = TABLE_PREFIX;
+
 	public function __construct($create_tables=false) {
 		$this->create_tables = $create_tables;
-		parent::__construct();
-		$this->setTableName('mod_mc_question_hint');
+		// use another table prefix?
+    if (file_exists(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json')) {
+      $config = json_decode(file_get_contents(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json'), true);
+      if (isset($config['table_prefix']))
+        self::$table_prefix = $config['table_prefix'];
+    }
+    parent::__construct();
+    $this->setTablePrefix(self::$table_prefix);
+    $this->setTableName('mod_mc_question_hint');
 		$this->addFieldDefinition(self::field_id, "INT(11) NOT NULL AUTO_INCREMENT", true);
 		$this->addFieldDefinition(self::field_group, "TINYINT NOT NULL DEFAULT '".self::group_undefined."'");
 		$this->addFieldDefinition(self::field_name, "VARCHAR(128) NOT NULL DEFAULT ''");
@@ -288,10 +328,20 @@ class dbMultipleChoiceTableSort extends dbConnectLE {
 
 	private $create_tables = false;
 
+	protected static $config_file = 'config.json';
+	protected static $table_prefix = TABLE_PREFIX;
+
 	public function __construct($create_tables=false) {
 		$this->create_tables = $create_tables;
-		parent::__construct();
-		$this->setTableName('mod_mc_table_sort');
+		// use another table prefix?
+    if (file_exists(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json')) {
+      $config = json_decode(file_get_contents(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json'), true);
+      if (isset($config['table_prefix']))
+        self::$table_prefix = $config['table_prefix'];
+    }
+    parent::__construct();
+    $this->setTablePrefix(self::$table_prefix);
+    $this->setTableName('mod_mc_table_sort');
 		$this->addFieldDefinition(self::field_id, "INT(11) NOT NULL AUTO_INCREMENT", true);
 		$this->addFieldDefinition(self::field_table, "VARCHAR(64) NOT NULL DEFAULT ''");
 		$this->addFieldDefinition(self::field_value, "VARCHAR(255) NOT NULL DEFAULT ''");
