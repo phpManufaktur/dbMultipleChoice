@@ -4,9 +4,9 @@
  * dbMultipleChoice
  *
  * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
- * @link http://phpmanufaktur.de
- * @copyright 2010 - 2012
- * @license http://www.gnu.org/licenses/gpl.html GNU Public License (GPL)
+ * @link https://addons.phpmanufaktur.de/de/name/dbmultiplechoice.php
+ * @copyright 2010 - 2012 phpManufaktur by Ralf Hertsch
+ * @license MIT License (MIT) http://www.opensource.org/licenses/MIT
  */
 
 // include class.secure.php to protect this file and the whole CMS!
@@ -36,7 +36,6 @@ else {
 $PRECHECK['PHP_VERSION'] = array('VERSION' => '5.2.0', 'OPERATOR' => '>=');
 $PRECHECK['WB_ADDONS'] = array(
 	'dbconnect_le'	=> array('VERSION' => '0.70', 'OPERATOR' => '>='),
-	'rhtools' => array('VERSION' => '0.46', 'OPERATOR' => '>='),
 	'dwoo' => array('VERSION' => '0.11', 'OPERATOR' => '>=')
 );
 

@@ -7,7 +7,8 @@
   <http://yals.de/OQRv0Y> for more informations
 * use optional DropletsExtension to autoload mc_frontend.css 
 * added anchor #mc to frontend.questionaire.htt
-* added function getURLbyPageID() to class.frontend.php   
+* added function getURLbyPageID() to class.frontend.php
+* removed access to rhTools   
 
 0.20 - 2012-06-14
 

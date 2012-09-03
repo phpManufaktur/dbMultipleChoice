@@ -2,9 +2,9 @@
  * dbMultipleChoice
  *
  * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
- * @link http://phpmanufaktur.de
- * @copyright 2010 - 2012
- * @license http://www.gnu.org/licenses/gpl.html GNU Public License (GPL)
+ * @link https://addons.phpmanufaktur.de/de/name/dbmultiplechoice.php
+ * @copyright 2010 - 2012 phpManufaktur by Ralf Hertsch
+ * @license MIT License (MIT) http://www.opensource.org/licenses/MIT
  *
  * Use {dump()} to get a list of all availables variables
  *}
