@@ -230,7 +230,6 @@ class dbMultipleChoiceCfg extends dbConnectLE {
    * @return BOOL Ergebnis
    */
   public function setValue($new_value, $id) {
-  	global $tools;
   	$value = '';
   	$where = array();
   	$where[self::field_id] = $id;
@@ -285,12 +284,7 @@ class dbMultipleChoiceCfg extends dbConnectLE {
   	endswitch;
   	unset($config[self::field_id]);
   	$config[self::field_value] = (string) $value;
-  	if (is_object($tools)) {
-  		$config[self::field_update_by] = $tools->getDisplayName();
-  	}
-  	else {
-  		$config[self::field_update_by] = 'SYSTEM';
-  	}
+  	$config[self::field_update_by] = isset($_SESSION['DISPLAY_NAME']) ? $_SESSION['DISPLAY_NAME'] : 'SYSTEM';
   	$config[self::field_update_when] = date('Y-m-d H:i:s');
   	if (!$this->sqlUpdateRecord($config, $where)) {
   		$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $this->getError()));
