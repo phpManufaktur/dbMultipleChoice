@@ -9,7 +9,7 @@
  * Use {dump()} to get a list of all availables variables
  *}
 <h2>{$header}</h2>
-{$intro}
+<a name="mc"></a>{$intro}
 <form name="{$form_name}" action="{$form_action}" method="post">
   <input type="hidden" name="{$action_name}" value="{$action_value}" />
   <input type="hidden" name="{$qid_name}" value="{$qid_value}" />
