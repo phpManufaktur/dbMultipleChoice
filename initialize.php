@@ -52,7 +52,6 @@ else {
 
 // include dbConnect
 require_once(WB_PATH.'/modules/dbconnect_le/include.php');
-require_once(WB_PATH.'/modules/rhtools/include.php');
 require_once(WB_PATH.'/modules/dwoo/include.php');
 require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.config.php');
 require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.multiplechoice.php');
