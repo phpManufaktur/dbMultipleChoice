@@ -1,7 +1,7 @@
 ### dbMultipleChoice
 (c) 2010-2012 - Ralf Hertsch, Berlin (Germany)
 
-0.21 - NOT PUBLISHED YET, JUST IN PROGRESS
+0.21 - 2012-09-03
 
 * added ability to change the table prefix easy via config.json, please read
   <http://yals.de/OQRv0Y> for more informations
