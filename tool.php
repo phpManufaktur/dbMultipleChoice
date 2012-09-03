@@ -44,7 +44,6 @@ else {
 }
 
 global $parser;
-global $tools;
 global $dbCfg;
 global $dbMCQuestion;
 global $dbMCQuestionaire;
@@ -53,7 +52,6 @@ global $dbMCQuestionHint;
 global $dbMCTableSort;
 
 if (!is_object($parser)) $parser = new Dwoo();
-if (!is_object($tools)) $tools = new rhTools();
 if (!is_object($dbCfg)) $dbCfg = new dbMultipleChoiceCfg();
 if (!is_object($dbMCQuestion)) $dbMCQuestion = new dbMultipleChoiceQuestion();
 if (!is_object($dbMCQuestionaire)) $dbMCQuestionaire = new dbMultipleChoiceQuestionaire();
@@ -423,7 +421,6 @@ class mcBackend {
 	 * @return STR DIALOG dlgConfig()
 	 */
 	public function configCheck() {
-		global $tools;
 		global $dbCfg;
 		$message = '';
 		// ueberpruefen, ob ein Eintrag geaendert wurde
@@ -495,7 +492,7 @@ class mcBackend {
 					$data[dbMultipleChoiceCfg::field_description] = $_REQUEST[dbMultipleChoiceCfg::field_description];
 					unset($_REQUEST[dbMultipleChoiceCfg::field_description]);
 					$data[dbMultipleChoiceCfg::field_status] = dbMultipleChoiceCfg::status_active;
-					$data[dbMultipleChoiceCfg::field_update_by] = $tools->getDisplayName();
+					$data[dbMultipleChoiceCfg::field_update_by] = isset($_SESSION['DISPLAY_NAME']) ? $_SESSION['DISPLAY_NAME'] : 'SYSTEM';
 					$data[dbMultipleChoiceCfg::field_update_when] = date('Y-m-d H:i:s');
 					$id = -1;
 					if (!$dbCfg->sqlInsertRecord($data, $id)) {
@@ -1000,7 +997,6 @@ class mcBackend {
 		global $dbMCQuestion;
 		global $dbMCQuestionItem;
 		global $dbMCQuestionHint;
-		global $tools;
 
 		$message = '';
 		$question = $dbMCQuestion->getFields();
@@ -1074,10 +1070,9 @@ class mcBackend {
 					else {
 						$data[dbMultipleChoiceQuestionItem::field_question] = trim(strip_tags($_REQUEST[dbMultipleChoiceQuestionItem::field_question.'_'.$i]));
 					}
-//					$data[dbMultipleChoiceQuestionItem::field_question] = $_REQUEST[dbMultipleChoiceQuestionItem::field_question.'_'.$i];
 					$data[dbMultipleChoiceQuestionItem::field_is_correct] = (isset($_REQUEST[dbMultipleChoiceQuestionItem::field_is_correct.'_'.$i])) ? 1 : 0;
 					$data[dbMultipleChoiceQuestionItem::field_status] = dbMultipleChoiceQuestionItem::status_active;
-					$data[dbMultipleChoiceQuestionItem::field_update_by] = $tools->getDisplayName();
+					$data[dbMultipleChoiceQuestionItem::field_update_by] = isset($_SESSION['DISPLAY_NAME']) ? $_SESSION['DISPLAY_NAME'] : 'SYSTEM';
 					$data[dbMultipleChoiceQuestionItem::field_update_when] = date('Y-m-d H:i:s');
 					if ($_REQUEST[dbMultipleChoiceQuestionItem::field_id.'_'.$i] != -1) {
 						// UPDATE
@@ -1116,7 +1111,7 @@ class mcBackend {
 				$where[dbMultipleChoiceQuestionItem::field_id] = $_REQUEST[dbMultipleChoiceQuestionItem::field_id.'_'.$i];
 				$data = array();
 				$data[dbMultipleChoiceQuestionItem::field_status] = dbMultipleChoiceQuestionItem::status_deleted;
-				$data[dbMultipleChoiceQuestionItem::field_update_by] = $tools->getDisplayName();
+				$data[dbMultipleChoiceQuestionItem::field_update_by] = isset($_SESSION['DISPLAY_NAME']) ? $_SESSION['DISPLAY_NAME'] : 'SYSTEM';
 				$data[dbMultipleChoiceQuestionItem::field_update_when] = date('Y-m-d H:i:s');
 				if (!$dbMCQuestionItem->sqlUpdateRecord($data, $where)) {
 					$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbMCQuestionItem->getError()));
@@ -1252,7 +1247,7 @@ class mcBackend {
 			$question[dbMultipleChoiceQuestion::field_status] = dbMultipleChoiceQuestion::status_locked_temp;
 			$message .= mc_msg_question_locked_temp;
 		}
-		$question[dbMultipleChoiceQuestion::field_update_by] = $tools->getDisplayName();
+		$question[dbMultipleChoiceQuestion::field_update_by] = isset($_SESSION['DISPLAY_NAME']) ? $_SESSION['DISPLAY_NAME'] : 'SYSTEM';
 		$question[dbMultipleChoiceQuestion::field_update_when] = date('Y-m-d H:i:s');
 
 		if ($_REQUEST[dbMultipleChoiceQuestion::field_id] == -1) {
@@ -1872,7 +1867,6 @@ class mcBackend {
    */
   public function checkQuestionaire() {
   	global $dbMCQuestionaire;
-  	global $tools;
   	global $dbMCQuestion;
 
   	(isset($_REQUEST[dbMultipleChoiceQuestionaire::field_id])) ? $qid = $_REQUEST[dbMultipleChoiceQuestionaire::field_id] : $qid = -1;
@@ -1903,7 +1897,7 @@ class mcBackend {
   			isset($_REQUEST[$key]) ? $data[$key] = implode(',', $_REQUEST[$key]) : $data[$key] = $value;
   			break;
   		case dbMultipleChoiceQuestionaire::field_update_by:
-  			$data[$key] = $tools->getDisplayName();
+  			$data[$key] = isset($_SESSION['DISPLAY_NAME']) ? $_SESSION['DISPLAY_NAME'] : 'SYSTEM';
   			break;
   		case dbMultipleChoiceQuestionaire::field_update_when:
   			$data[$key] = date('Y-m-d H:i:s');
