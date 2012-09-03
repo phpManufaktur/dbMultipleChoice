@@ -45,7 +45,6 @@ else {
 require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/initialize.php');
 
 global $parser;
-global $tools;
 global $dbCfg;
 global $dbMCQuestion;
 global $dbMCQuestionaire;
@@ -53,7 +52,6 @@ global $dbMCQuestionItem;
 global $dbMCTableSort;
 
 if (!is_object($parser)) $parser = new Dwoo();
-if (!is_object($tools)) $tools = new rhTools();
 if (!is_object($dbCfg)) $dbCfg = new dbMultipleChoiceCfg();
 if (!is_object($dbMCQuestion)) $dbMCQuestion = new dbMultipleChoiceQuestion();
 if (!is_object($dbMCQuestionaire)) $dbMCQuestionaire = new dbMultipleChoiceQuestionaire();
@@ -80,19 +78,43 @@ class multipleChoiceFrontend {
 	 * Konstruktor
 	 */
 	public function __construct($id=-1, $show_answer=false, $use_url='', $success_url='') {
-		global $tools;
 		$this->qid = $id;
 		$this->show_answer = (bool) $show_answer;
 		if (!empty($use_url)) {
 			$this->page_link = $use_url;
 		}
 		else {
-			$tools->getPageLinkByPageID(PAGE_ID, $this->page_link);
+			$this->page_link = self::getURLbyPageID(PAGE_ID).'#mc';
 		}
 		$this->template_path = WB_PATH . '/modules/' . basename(dirname(__FILE__)) . '/htt/' ;
 		$this->success_url = $success_url;
 	} // __construct()
 
+	static function getURLbyPageID($page_id) {
+	  global $database;
+
+	  if (defined('TOPIC_ID')) {
+	    // this is a TOPICS page
+	    $SQL = "SELECT `link` FROM `".TABLE_PREFIX."mod_topics` WHERE `topic_id`='".TOPIC_ID."'";
+	    $link = $database->get_one($SQL);
+	    if ($database->is_error()) {
+	      trigger_error(sprintf('[%s - %s] %s', __FUNCTION__, __LINE__, $database->get_error()), E_USER_ERROR);
+	      return false;
+	    }
+	    // include TOPICS settings
+	    global $topics_directory;
+	    include_once WB_PATH . '/modules/topics/module_settings.php';
+	    return WB_URL . $topics_directory . $link . PAGE_EXTENSION;
+	  }
+
+	  $SQL = "SELECT `link` FROM `".TABLE_PREFIX."pages` WHERE `page_id`='$page_id'";
+	  $link = $database->get_one($SQL, MYSQL_ASSOC);
+	  if ($database->is_error()) {
+	    trigger_error(sprintf('[%s - %s] %s', __FUNCTION__, __LINE__, $database->get_error()), E_USER_ERROR);
+	    return false;
+	  }
+	  return WB_URL.PAGES_DIRECTORY.$link.PAGE_EXTENSION;
+	}
 	/**
     * Set $this->error to $error
     *
@@ -181,8 +203,8 @@ class multipleChoiceFrontend {
   	  // if DroplesExtension exists load interface
   	  require_once (WB_PATH . '/modules/droplets_extension/interface.php');
     	// register CSS file
-    	if (!is_registered_droplet_css('dbMultipleChoice', PAGE_ID)) {
-    	  register_droplet_css('dbMultipleChoice', PAGE_ID, 'multiplechoice', 'mc_frontend.css');
+    	if (!is_registered_droplet_css('mc_questionaire', PAGE_ID)) {
+    	  register_droplet_css('mc_questionaire', PAGE_ID, 'multiplechoice', 'mc_frontend.css');
     	}
   	}
     isset($_REQUEST[self::request_action]) ? $action = $_REQUEST[self::request_action] : $action = self::action_default;
