@@ -4,8 +4,8 @@
  * dbMultipleChoice
  *
  * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
- * @link https://addons.phpmanufaktur.de/de/name/dbmultiplechoice.php
- * @copyright 2010 - 2012 phpManufaktur by Ralf Hertsch
+ * @link https://phpmanufaktur.de
+ * @copyright 2010 - 2013 phpManufaktur by Ralf Hertsch
  * @license MIT License (MIT) http://www.opensource.org/licenses/MIT
  */
 if (file_exists(WB_PATH.'/modules/multiplechoice/class.frontend.php')) {
