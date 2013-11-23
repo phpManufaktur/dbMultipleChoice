@@ -71,7 +71,7 @@ select[name=qselgrp]
 }
 textarea
 {
-  width: 98%; 
+  width: 98%;
   font-size:8pt;
 }
 
@@ -170,6 +170,10 @@ textarea
 }
 .release_notes {
   font-size: 9pt;
+}
+.mc_backend {
+    margin: 0;
+    padding: 5px;
 }
 .mc_item_normal {
 

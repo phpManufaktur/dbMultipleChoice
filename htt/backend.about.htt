@@ -10,7 +10,7 @@
  *}
 <table width="99%">
   <colgroup>
-    <col width="470" />   
+    <col width="470" />
     <col width="*" />
   </colgroup>
   <tr>
@@ -19,7 +19,7 @@
     </td>
     <td style="vertical-align: bottom;">
       <p><b>dbMultipleChoice</b>, Release {$release}<br />
-      (c) 2010-2012 by <b><i>php</i>Manufaktur</b></p>
+      (c) 2010-2013 by <b><i>php</i>Manufaktur</b></p>
       <p>Ralf Hertsch<br />
       Stockholmer Str. 31<br />
       13359 Berlin (Germany)</p>
