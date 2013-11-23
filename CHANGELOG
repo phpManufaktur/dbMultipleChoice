@@ -1,14 +1,19 @@
 ### dbMultipleChoice
-(c) 2010-2012 - Ralf Hertsch, Berlin (Germany)
+(c) 2010-2013 - Ralf Hertsch, Berlin (Germany)
+
+0.22 - 2013-11-23
+
+* general program maintenance
+* prepared dbMultipleChoice for BlackCat CMS
 
 0.21 - 2012-09-03
 
 * added ability to change the table prefix easy via config.json, please read
   <http://yals.de/OQRv0Y> for more informations
-* use optional DropletsExtension to autoload mc_frontend.css 
+* use optional DropletsExtension to autoload mc_frontend.css
 * added anchor #mc to frontend.questionaire.htt
 * added function getURLbyPageID() to class.frontend.php
-* removed access to rhTools   
+* removed access to rhTools
 
 0.20 - 2012-06-14
 
@@ -27,7 +32,7 @@
 
 * fixed: some smaller bugs, code cleanup
 * added: droplet parameter "success_url" redirect to the specified URL if all answers are correct
-* grant compatibillity for LEPTON CMS 
+* grant compatibillity for LEPTON CMS
 
 0.17 - 2011-07-01
 
@@ -35,7 +40,7 @@
 
 0.16 - 2011-02-25
 
-* changed: small changes at the template backend.questionaire.edit.htt 
+* changed: small changes at the template backend.questionaire.edit.htt
 * changed: some small code cleanups
 
 0.15 - 2011-02-23

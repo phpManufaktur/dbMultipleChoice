@@ -34,7 +34,7 @@ else {
 $module_directory     = 'multiplechoice';
 $module_name          = 'dbMultipleChoice';
 $module_function      = 'tool';
-$module_version       = '0.21';
+$module_version       = '0.22';
 $module_status        = 'stable';
 $module_platform      = '2.8';
 $module_author        = 'phpManufaktur, Berlin (Germany)';
@@ -42,5 +42,3 @@ $module_license       = 'MIT License (MIT)';
 $module_description   = 'Multiple Choice tests for WebsiteBaker and LEPTON CMS';
 $module_home          = 'https://addons.phpmanufaktur.de/de/name/dbmultiplechoice.php';
 $module_guid          = '220B9C46-E78D-40C8-90EB-C0B3A0CD6123';
-
-?>
